@@ -1,0 +1,131 @@
+/*
+  Name:       devhelper
+  Author:     Hengfei Yang (http://github.com/hengfeiyang)
+  Website:    https://github.com/hengfeiyang/devhelper
+*/
+
+.cm-s-devhelper-night.CodeMirror {
+  background-color: #2C2C2C;
+  font-size: 12px;
+  color: #ddd;
+}
+
+.cm-s-devhelper-night .CodeMirror-gutters {
+  background-color: #292929;
+  color: #ddd;
+  border: none;
+}
+
+.cm-s-devhelper-night .CodeMirror-guttermarker,
+.cm-s-devhelper-night .CodeMirror-guttermarker-subtle,
+.cm-s-devhelper-night .CodeMirror-linenumber {
+  color: #999;
+  font-size: 11px;
+}
+
+.cm-s-devhelper-night .CodeMirror-cursor {
+  border-left: 1px solid #e5e7eb;
+}
+
+.cm-s-devhelper-night div.CodeMirror-selected {
+  background: #2C2C2C;
+}
+
+.cm-s-devhelper-night .CodeMirror-activeline-gutter,
+.cm-s-devhelper-night .CodeMirror-activeline-background {
+  background: #2C2C2C;
+}
+
+.cm-s-devhelper-night.CodeMirror-focused div.CodeMirror-selected,
+.cm-s-devhelper-night.CodeMirror-focused .CodeMirror-activeline-gutter,
+.cm-s-devhelper-night.CodeMirror-focused .CodeMirror-activeline-background {
+  background-color: rgba(130, 130, 130, 0.1);
+}
+
+.cm-s-devhelper-night .cm-keyword {
+  color: rgba(126, 207, 43, 1);
+}
+
+.cm-s-devhelper-night .cm-operator {
+  color: #89DDFF;
+}
+
+.cm-s-devhelper-night .cm-variable {
+  color: #f07178;
+}
+
+.cm-s-devhelper-night .cm-variable-2 {
+  color: #EEFFFF;
+}
+
+.cm-s-devhelper-night .cm-variable-3 {
+  color: #f07178;
+}
+
+.cm-s-devhelper-night .cm-type {
+  color: #f07178;
+}
+
+.cm-s-devhelper-night .cm-builtin {
+  color: #FFCB6B;
+}
+
+.cm-s-devhelper-night .cm-atom {
+  color: #F78C6C;
+}
+
+.cm-s-devhelper-night .cm-number {
+  color: #fff;
+}
+
+.cm-s-devhelper-night .cm-def {
+  color: #82AAFF;
+}
+
+.cm-s-devhelper-night .cm-string {
+  color: rgb(240, 225, 55);
+}
+
+.cm-s-devhelper-night .cm-string-2 {
+  color: #f07178;
+}
+
+.cm-s-devhelper-night .cm-comment {
+  color: #676E95;
+}
+
+.cm-s-devhelper-night .cm-tag {
+  color: #FF5370;
+}
+
+.cm-s-devhelper-night .cm-meta {
+  color: #FFCB6B;
+}
+
+.cm-s-devhelper-night .cm-attribute {
+  color: rgba(126, 207, 43, 1);
+}
+
+.cm-s-devhelper-night .cm-property {
+  color: rgba(126, 207, 43, 1);
+}
+
+.cm-s-devhelper-night .cm-qualifier {
+  color: #DECB6B;
+}
+
+.cm-s-devhelper-night .cm-variable-3,
+.cm-s-devhelper-night .cm-type {
+  color: #DECB6B;
+}
+
+
+.cm-s-devhelper-night .cm-error {
+  color: rgba(255, 255, 255, 1.0);
+  background-color: #FF5370;
+}
+
+.cm-s-devhelper-night .CodeMirror-matchingbracket {
+  text-decoration: underline;
+  color: white !important;
+}

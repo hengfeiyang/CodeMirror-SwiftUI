@@ -117,4 +117,5 @@ public enum CodeViewTheme: String, CaseIterable {
   case dawn = "dawn"
   case tango = "tango"
   case cloudsMidnight = "clouds-midnight"
+  case devhelperNight = "devhelper-night"
 }

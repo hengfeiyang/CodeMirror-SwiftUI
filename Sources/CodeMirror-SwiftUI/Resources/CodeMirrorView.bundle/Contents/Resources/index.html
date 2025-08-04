@@ -1,428 +1,456 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 
-    <link rel="stylesheet" href="lib/codemirror.css">
-    <script src="lib/codemirror.js"></script>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 
-    <script src="addons/search.js"></script>
-    <script src="addons/dialog.js"></script>
-    
-    <link rel="stylesheet" href="addons/dialog.css">
-    <link rel="stylesheet" href="addons/fold/foldgutter.css" />
-    <link rel="stylesheet" href="addons/hint/show-hint.css" />
-      
-    <script src="addons/display/panel.js"></script>
-    <script src="addons/search/jump-to-line.js"></script>
-    <script src="addons/search/match-highlighter.js"></script>
-    <script src="addons/search/searchcursor.js"></script>
-    <script src="addons/fold/foldcode.js"></script>
-    <script src="addons/fold/foldgutter.js"></script>
-    <script src="addons/fold/brace-fold.js"></script>
-    <script src="addons/fold/xml-fold.js"></script>
-    <script src="addons/fold/indent-fold.js"></script>
-    <script src="addons/fold/comment-fold.js"></script>
-    <script src="addons/selection/active-line.js"></script>
-    <script src="addons/selection/selection-pointer.js"></script>
-    <script src="addons/edit/closebrackets.js"></script>
-    <script src="addons/edit/closetag.js"></script>
-    <script src="addons/edit/matchtags.js"></script>
-    <script src="addons/comment/comment.js"></script>
-    <script src="addons/show-invisibles.js"></script>
-    <script src="addons/hint/css-hint.js"></script>
-    <script src="addons/hint/html-hint.js"></script>
-    <script src="addons/hint/javascript-hint.js"></script>
-    <script src="addons/hint/show-hint.js"></script>
-    <script src="addons/hint/sql-hint.js"></script>
-    <script src="addons/hint/xml-hint.js"></script>
+  <link rel="stylesheet" href="lib/codemirror.css">
+  <script src="lib/codemirror.js"></script>
 
-    <link rel="stylesheet" href="theme/bbedit.css"/>
-    <link rel="stylesheet" href="theme/all-hallow-eve.css"/>
-    <link rel="stylesheet" href="theme/idlefingers.css"/>
-    <link rel="stylesheet" href="theme/spacecadet.css"/>
-    <link rel="stylesheet" href="theme/idle.css"/>
-    <link rel="stylesheet" href="theme/oceanic.css"/>
-    <link rel="stylesheet" href="theme/clouds.css"/>
-    <link rel="stylesheet" href="theme/github.css"/>
-    <link rel="stylesheet" href="theme/ryan-light.css"/>
-    <link rel="stylesheet" href="theme/black-pearl.css"/>
-    <link rel="stylesheet" href="theme/monoindustrial.css"/>
-    <link rel="stylesheet" href="theme/happy-happy-joy-joy-2.css"/>
-    <link rel="stylesheet" href="theme/cube2media.css"/>
-    <link rel="stylesheet" href="theme/friendship-bracelet.css"/>
-    <link rel="stylesheet" href="theme/classic-modified.css"/>
-    <link rel="stylesheet" href="theme/amy.css"/>
-    <link rel="stylesheet" href="theme/demo.css"/>
-    <link rel="stylesheet" href="theme/rdark.css"/>
-    <link rel="stylesheet" href="theme/espresso.css"/>
-    <link rel="stylesheet" href="theme/sunburst.css"/>
-    <link rel="stylesheet" href="theme/made-of-code.css"/>
-    <link rel="stylesheet" href="theme/arona.css"/>
-    <link rel="stylesheet" href="theme/putty.css"/>
-    <link rel="stylesheet" href="theme/nightlion.css"/>
-    <link rel="stylesheet" href="theme/sidewalkchalk.css"/>
-    <link rel="stylesheet" href="theme/swyphs-ii.css"/>
-    <link rel="stylesheet" href="theme/iplastic.css"/>
-    <link rel="stylesheet" href="theme/cssedit.css"/>
-    <link rel="stylesheet" href="theme/solarized-(light).css"/>
-    <link rel="stylesheet" href="theme/mac-classic.css"/>
-    <link rel="stylesheet" href="theme/pastels-on-dark.css"/>
-    <link rel="stylesheet" href="theme/ir_black.css"/>
-    <link rel="stylesheet" href="theme/material.css"/>
-    <link rel="stylesheet" href="theme/monokai-fannonedition.css"/>
-    <link rel="stylesheet" href="theme/monokai-bright.css"/>
-    <link rel="stylesheet" href="theme/eiffel.css"/>
-    <link rel="stylesheet" href="theme/base16-light.css"/>
-    <link rel="stylesheet" href="theme/oceanic-muted.css"/>
-    <link rel="stylesheet" href="theme/summerfruit.css"/>
-    <link rel="stylesheet" href="theme/espresso-libre.css"/>
-    <link rel="stylesheet" href="theme/krtheme.css"/>
-    <link rel="stylesheet" href="theme/mreq.css"/>
-    <link rel="stylesheet" href="theme/chanfle.css"/>
-    <link rel="stylesheet" href="theme/venom.css"/>
-    <link rel="stylesheet" href="theme/juicy.css"/>
-    <link rel="stylesheet" href="theme/coda.css"/>
-    <link rel="stylesheet" href="theme/fluidvision.css"/>
-    <link rel="stylesheet" href="theme/tomorrow-night-blue.css"/>
-    <link rel="stylesheet" href="theme/magicwb-(amiga).css"/>
-    <link rel="stylesheet" href="theme/twilight.css"/>
-    <link rel="stylesheet" href="theme/vibrant-ink.css"/>
-    <link rel="stylesheet" href="theme/summer-sun.css"/>
-    <link rel="stylesheet" href="theme/monokai.css"/>
-    <link rel="stylesheet" href="theme/rails-envy.css"/>
-    <link rel="stylesheet" href="theme/merbivore.css"/>
-    <link rel="stylesheet" href="theme/dracula.css"/>
-    <link rel="stylesheet" href="theme/pastie.css"/>
-    <link rel="stylesheet" href="theme/lowlight.css"/>
-    <link rel="stylesheet" href="theme/spectacular.css"/>
-    <link rel="stylesheet" href="theme/smoothy.css"/>
-    <link rel="stylesheet" href="theme/vibrant-fin.css"/>
-    <link rel="stylesheet" href="theme/blackboard.css"/>
-    <link rel="stylesheet" href="theme/slush-&-poppies.css"/>
-    <link rel="stylesheet" href="theme/freckle.css"/>
-    <link rel="stylesheet" href="theme/fantasyscript.css"/>
-    <link rel="stylesheet" href="theme/tomorrow-night-eighties.css"/>
-    <link rel="stylesheet" href="theme/rhuk.css"/>
-    <link rel="stylesheet" href="theme/toy-chest.css"/>
-    <link rel="stylesheet" href="theme/fake.css"/>
-    <link rel="stylesheet" href="theme/emacs-strict.css"/>
-    <link rel="stylesheet" href="theme/merbivore-soft.css"/>
-    <link rel="stylesheet" href="theme/fade-to-grey.css"/>
-    <link rel="stylesheet" href="theme/monokai-sublime.css"/>
-    <link rel="stylesheet" href="theme/johnny.css"/>
-    <link rel="stylesheet" href="theme/railscasts.css"/>
-    <link rel="stylesheet" href="theme/argonaut.css"/>
-    <link rel="stylesheet" href="theme/tomorrow-night-bright.css"/>
-    <link rel="stylesheet" href="theme/lazy.css"/>
-    <link rel="stylesheet" href="theme/tomorrow-night.css"/>
-    <link rel="stylesheet" href="theme/bongzilla.css"/>
-    <link rel="stylesheet" href="theme/glitterbomb.css"/>
-    <link rel="stylesheet" href="theme/ir_white.css"/>
-    <link rel="stylesheet" href="theme/zenburnesque.css"/>
-    <link rel="stylesheet" href="theme/notebook.css"/>
-    <link rel="stylesheet" href="theme/django-(smoothy).css"/>
-    <link rel="stylesheet" href="theme/blackboard-black.css"/>
-    <link rel="stylesheet" href="theme/black-pearl-ii.css"/>
-    <link rel="stylesheet" href="theme/kuroir.css"/>
-    <link rel="stylesheet" href="theme/cobalt.css"/>
-    <link rel="stylesheet" href="theme/ayu-mirage.css"/>
-    <link rel="stylesheet" href="theme/chrome-devtools.css"/>
-    <link rel="stylesheet" href="theme/prospettiva.css"/>
-    <link rel="stylesheet" href="theme/espresso-soda.css"/>
-    <link rel="stylesheet" href="theme/birds-of-paradise.css"/>
-    <link rel="stylesheet" href="theme/text-ex-machina.css"/>
-    <link rel="stylesheet" href="theme/django.css"/>
-    <link rel="stylesheet" href="theme/tomorrow.css"/>
-    <link rel="stylesheet" href="theme/solarized-(dark).css"/>
-    <link rel="stylesheet" href="theme/plasticcodewrap.css"/>
-    <link rel="stylesheet" href="theme/material-palenight.css"/>
-    <link rel="stylesheet" href="theme/bespin.css"/>
-    <link rel="stylesheet" href="theme/espresso-tutti.css"/>
-    <link rel="stylesheet" href="theme/vibrant-tango.css"/>
-    <link rel="stylesheet" href="theme/tubster.css"/>
-    <link rel="stylesheet" href="theme/darkpastel.css"/>
-    <link rel="stylesheet" href="theme/dawn.css"/>
-    <link rel="stylesheet" href="theme/tango.css"/>
-    <link rel="stylesheet" href="theme/clouds-midnight.css"/>
-    <link rel="stylesheet" href="theme/snip-material.css"/>
-     
-    <script src="modes/apl/apl.js"></script>
-    <script src="modes/asciiarmor/asciiarmor.js"></script>
-    <script src="modes/asn.1/asn.1.js"></script>
-    <script src="modes/asterisk/asterisk.js"></script>
-    <script src="modes/brainfuck/brainfuck.js"></script>
-    <script src="modes/clike/clike.js"></script>
-    <script src="modes/clojure/clojure.js"></script>
-    <script src="modes/cmake/cmake.js"></script>
-    <script src="modes/cobol/cobol.js"></script>
-    <script src="modes/coffeescript/coffeescript.js"></script>
-    <script src="modes/commonlisp/commonlisp.js"></script>
-    <script src="modes/crystal/crystal.js"></script>
-    <script src="modes/css/css.js"></script>
-    <script src="modes/cypher/cypher.js"></script>
-    <script src="modes/d/d.js"></script>
-    <script src="modes/dart/dart.js"></script>
-    <script src="modes/diff/diff.js"></script>
-    <script src="modes/django/django.js"></script>
-    <script src="modes/dockerfile/dockerfile.js"></script>
-    <script src="modes/dtd/dtd.js"></script>
-    <script src="modes/dylan/dylan.js"></script>
-    <script src="modes/ebnf/ebnf.js"></script>
-    <script src="modes/ecl/ecl.js"></script>
-    <script src="modes/eiffel/eiffel.js"></script>
-    <script src="modes/elm/elm.js"></script>
-    <script src="modes/erlang/erlang.js"></script>
-    <script src="modes/factor/factor.js"></script>
-    <script src="modes/fcl/fcl.js"></script>
-    <script src="modes/forth/forth.js"></script>
-    <script src="modes/fortran/fortran.js"></script>
-    <script src="modes/gas/gas.js"></script>
-    <script src="modes/gfm/gfm.js"></script>
-    <script src="modes/gherkin/gherkin.js"></script>
-    <script src="modes/go/go.js"></script>
-    <script src="modes/groovy/groovy.js"></script>
-    <script src="modes/haml/haml.js"></script>
-    <script src="modes/handlebars/handlebars.js"></script>
-    <script src="modes/haskell/haskell.js"></script>
-    <script src="modes/haskell-literate/haskell-literate.js"></script>
-    <script src="modes/haxe/haxe.js"></script>
-    <script src="modes/htmlembedded/htmlembedded.js"></script>
-    <script src="modes/htmlmixed/htmlmixed.js"></script>
-    <script src="modes/http/http.js"></script>
-    <script src="modes/idl/idl.js"></script>
-    <script src="modes/javascript/javascript.js"></script>
-    <script src="modes/jinja2/jinja2.js"></script>
-    <script src="modes/jsx/jsx.js"></script>
-    <script src="modes/julia/julia.js"></script>
-    <script src="modes/livescript/livescript.js"></script>
-    <script src="modes/lua/lua.js"></script>
-    <script src="modes/markdown/markdown.js"></script>
-    <script src="modes/mathematica/mathematica.js"></script>
-    <script src="modes/mbox/mbox.js"></script>
-    <script src="modes/mirc/mirc.js"></script>
-    <script src="modes/mllike/mllike.js"></script>
-    <script src="modes/modelica/modelica.js"></script>
-    <script src="modes/mscgen/mscgen.js"></script>
-    <script src="modes/mumps/mumps.js"></script>
-    <script src="modes/nginx/nginx.js"></script>
-    <script src="modes/nsis/nsis.js"></script>
-    <script src="modes/ntriples/ntriples.js"></script>
-    <script src="modes/octave/octave.js"></script>
-    <script src="modes/oz/oz.js"></script>
-    <script src="modes/pascalpascal.js"></script>
-    <script src="modes/pegjs/pegjs.js"></script>
-    <script src="modes/perl/perl.js"></script>
-    <script src="modes/php/php.js"></script>
-    <script src="modes/pig/pig.js"></script>
-    <script src="modes/powershell/powershell.js"></script>
-    <script src="modes/properties/properties.js"></script>
-    <script src="modes/protobuf/protobuf.js"></script>
-    <script src="modes/pug/pug.js"></script>
-    <script src="modes/puppet/puppet.js"></script>
-    <script src="modes/python/python.js"></script>
-    <script src="modes/q/q.js"></script>
-    <script src="modes/r/r.js"></script>
-    <script src="modes/rpm/rpm.js"></script>
-    <script src="modes/rst/rst.js"></script>
-    <script src="modes/ruby/ruby.js"></script>
-    <script src="modes/rust/rust.js"></script>
-    <script src="modes/sas/sas.js"></script>
-    <script src="modes/sass/sass.js"></script>
-    <script src="modes/scheme/scheme.js"></script>
-    <script src="modes/shell/shell.js"></script>
-    <script src="modes/sieve/sieve.js"></script>
-    <script src="modes/slim/slim.js"></script>
-    <script src="modes/smalltalk/smalltalk.js"></script>
-    <script src="modes/smarty/smarty.js"></script>
-    <script src="modes/solr/solr.js"></script>
-    <script src="modes/soy/soy.js"></script>
-    <script src="modes/sparql/sparql.js"></script>
-    <script src="modes/spreadsheet/spreadsheet.js"></script>
-    <script src="modes/sql/sql.js"></script>
-    <script src="modes/stex/stex.js"></script>
-    <script src="modes/stylus/stylus.js"></script>
-    <script src="modes/swift/swift.js"></script>
-    <script src="modes/tcl/tcl.js"></script>
-    <script src="modes/textile/textile.js"></script>
-    <script src="modes/tiddlywiki/tiddlywiki.js"></script>
-    <script src="modes/tiki/tiki.js"></script>
-    <script src="modes/toml/toml.js"></script>
-    <script src="modes/tornado/tornado.js"></script>
-    <script src="modes/troff/troff.js"></script>
-    <script src="modes/ttcn/ttcn.js"></script>
-    <script src="modes/ttcn-cfg/ttcn-cfg.js"></script>
-    <script src="modes/turtle/turtle.js"></script>
-    <script src="modes/twig/twig.js"></script>
-    <script src="modes/vb/vb.js"></script>
-    <script src="modes/vbscript/vbscript.js"></script>
-    <script src="modes/velocity/velocity.js"></script>
-    <script src="modes/verilog/verilog.js"></script>
-    <script src="modes/vhdl/vhdl.js"></script>
-    <script src="modes/vue/vue.js"></script>
-    <script src="modes/webidl/webidl.js"></script>
-    <script src="modes/xml/xml.js"></script>
-    <script src="modes/xquery/xquery.js"></script>
-    <script src="modes/yacas/yacas.js"></script>
-    <script src="modes/yaml/yaml.js"></script>
-    <script src="modes/yaml-frontmatter/yaml-frontmatter.js"></script>
-    <script src="modes/z80/z80.js"></script>
+  <script src="addons/search.js"></script>
+  <script src="addons/dialog.js"></script>
 
-  </head>
-  <style>
+  <link rel="stylesheet" href="addons/dialog.css">
+  <link rel="stylesheet" href="addons/fold/foldgutter.css" />
+  <link rel="stylesheet" href="addons/hint/show-hint.css" />
 
-    html,body {
-      margin: 0px;
-      padding: 0px;
-      width: 100%;
-      height: 100%;
+  <script src="addons/display/panel.js"></script>
+  <script src="addons/search/jump-to-line.js"></script>
+  <script src="addons/search/match-highlighter.js"></script>
+  <script src="addons/search/searchcursor.js"></script>
+  <script src="addons/fold/foldcode.js"></script>
+  <script src="addons/fold/foldgutter.js"></script>
+  <script src="addons/fold/brace-fold.js"></script>
+  <script src="addons/fold/xml-fold.js"></script>
+  <script src="addons/fold/indent-fold.js"></script>
+  <script src="addons/fold/comment-fold.js"></script>
+  <script src="addons/selection/active-line.js"></script>
+  <script src="addons/selection/selection-pointer.js"></script>
+  <script src="addons/edit/closebrackets.js"></script>
+  <script src="addons/edit/closetag.js"></script>
+  <script src="addons/edit/matchtags.js"></script>
+  <script src="addons/comment/comment.js"></script>
+  <script src="addons/show-invisibles.js"></script>
+  <script src="addons/hint/css-hint.js"></script>
+  <script src="addons/hint/html-hint.js"></script>
+  <script src="addons/hint/javascript-hint.js"></script>
+  <script src="addons/hint/show-hint.js"></script>
+  <script src="addons/hint/sql-hint.js"></script>
+  <script src="addons/hint/xml-hint.js"></script>
+
+  <link rel="stylesheet" href="theme/bbedit.css" />
+  <link rel="stylesheet" href="theme/all-hallow-eve.css" />
+  <link rel="stylesheet" href="theme/idlefingers.css" />
+  <link rel="stylesheet" href="theme/spacecadet.css" />
+  <link rel="stylesheet" href="theme/idle.css" />
+  <link rel="stylesheet" href="theme/oceanic.css" />
+  <link rel="stylesheet" href="theme/clouds.css" />
+  <link rel="stylesheet" href="theme/github.css" />
+  <link rel="stylesheet" href="theme/ryan-light.css" />
+  <link rel="stylesheet" href="theme/black-pearl.css" />
+  <link rel="stylesheet" href="theme/monoindustrial.css" />
+  <link rel="stylesheet" href="theme/happy-happy-joy-joy-2.css" />
+  <link rel="stylesheet" href="theme/cube2media.css" />
+  <link rel="stylesheet" href="theme/friendship-bracelet.css" />
+  <link rel="stylesheet" href="theme/classic-modified.css" />
+  <link rel="stylesheet" href="theme/amy.css" />
+  <link rel="stylesheet" href="theme/demo.css" />
+  <link rel="stylesheet" href="theme/rdark.css" />
+  <link rel="stylesheet" href="theme/espresso.css" />
+  <link rel="stylesheet" href="theme/sunburst.css" />
+  <link rel="stylesheet" href="theme/made-of-code.css" />
+  <link rel="stylesheet" href="theme/arona.css" />
+  <link rel="stylesheet" href="theme/putty.css" />
+  <link rel="stylesheet" href="theme/nightlion.css" />
+  <link rel="stylesheet" href="theme/sidewalkchalk.css" />
+  <link rel="stylesheet" href="theme/swyphs-ii.css" />
+  <link rel="stylesheet" href="theme/iplastic.css" />
+  <link rel="stylesheet" href="theme/cssedit.css" />
+  <link rel="stylesheet" href="theme/solarized-(light).css" />
+  <link rel="stylesheet" href="theme/mac-classic.css" />
+  <link rel="stylesheet" href="theme/pastels-on-dark.css" />
+  <link rel="stylesheet" href="theme/ir_black.css" />
+  <link rel="stylesheet" href="theme/material.css" />
+  <link rel="stylesheet" href="theme/monokai-fannonedition.css" />
+  <link rel="stylesheet" href="theme/monokai-bright.css" />
+  <link rel="stylesheet" href="theme/eiffel.css" />
+  <link rel="stylesheet" href="theme/base16-light.css" />
+  <link rel="stylesheet" href="theme/oceanic-muted.css" />
+  <link rel="stylesheet" href="theme/summerfruit.css" />
+  <link rel="stylesheet" href="theme/espresso-libre.css" />
+  <link rel="stylesheet" href="theme/krtheme.css" />
+  <link rel="stylesheet" href="theme/mreq.css" />
+  <link rel="stylesheet" href="theme/chanfle.css" />
+  <link rel="stylesheet" href="theme/venom.css" />
+  <link rel="stylesheet" href="theme/juicy.css" />
+  <link rel="stylesheet" href="theme/coda.css" />
+  <link rel="stylesheet" href="theme/fluidvision.css" />
+  <link rel="stylesheet" href="theme/tomorrow-night-blue.css" />
+  <link rel="stylesheet" href="theme/magicwb-(amiga).css" />
+  <link rel="stylesheet" href="theme/twilight.css" />
+  <link rel="stylesheet" href="theme/vibrant-ink.css" />
+  <link rel="stylesheet" href="theme/summer-sun.css" />
+  <link rel="stylesheet" href="theme/monokai.css" />
+  <link rel="stylesheet" href="theme/rails-envy.css" />
+  <link rel="stylesheet" href="theme/merbivore.css" />
+  <link rel="stylesheet" href="theme/dracula.css" />
+  <link rel="stylesheet" href="theme/pastie.css" />
+  <link rel="stylesheet" href="theme/lowlight.css" />
+  <link rel="stylesheet" href="theme/spectacular.css" />
+  <link rel="stylesheet" href="theme/smoothy.css" />
+  <link rel="stylesheet" href="theme/vibrant-fin.css" />
+  <link rel="stylesheet" href="theme/blackboard.css" />
+  <link rel="stylesheet" href="theme/slush-&-poppies.css" />
+  <link rel="stylesheet" href="theme/freckle.css" />
+  <link rel="stylesheet" href="theme/fantasyscript.css" />
+  <link rel="stylesheet" href="theme/tomorrow-night-eighties.css" />
+  <link rel="stylesheet" href="theme/rhuk.css" />
+  <link rel="stylesheet" href="theme/toy-chest.css" />
+  <link rel="stylesheet" href="theme/fake.css" />
+  <link rel="stylesheet" href="theme/emacs-strict.css" />
+  <link rel="stylesheet" href="theme/merbivore-soft.css" />
+  <link rel="stylesheet" href="theme/fade-to-grey.css" />
+  <link rel="stylesheet" href="theme/monokai-sublime.css" />
+  <link rel="stylesheet" href="theme/johnny.css" />
+  <link rel="stylesheet" href="theme/railscasts.css" />
+  <link rel="stylesheet" href="theme/argonaut.css" />
+  <link rel="stylesheet" href="theme/tomorrow-night-bright.css" />
+  <link rel="stylesheet" href="theme/lazy.css" />
+  <link rel="stylesheet" href="theme/tomorrow-night.css" />
+  <link rel="stylesheet" href="theme/bongzilla.css" />
+  <link rel="stylesheet" href="theme/glitterbomb.css" />
+  <link rel="stylesheet" href="theme/ir_white.css" />
+  <link rel="stylesheet" href="theme/zenburnesque.css" />
+  <link rel="stylesheet" href="theme/notebook.css" />
+  <link rel="stylesheet" href="theme/django-(smoothy).css" />
+  <link rel="stylesheet" href="theme/blackboard-black.css" />
+  <link rel="stylesheet" href="theme/black-pearl-ii.css" />
+  <link rel="stylesheet" href="theme/kuroir.css" />
+  <link rel="stylesheet" href="theme/cobalt.css" />
+  <link rel="stylesheet" href="theme/ayu-mirage.css" />
+  <link rel="stylesheet" href="theme/chrome-devtools.css" />
+  <link rel="stylesheet" href="theme/prospettiva.css" />
+  <link rel="stylesheet" href="theme/espresso-soda.css" />
+  <link rel="stylesheet" href="theme/birds-of-paradise.css" />
+  <link rel="stylesheet" href="theme/text-ex-machina.css" />
+  <link rel="stylesheet" href="theme/django.css" />
+  <link rel="stylesheet" href="theme/tomorrow.css" />
+  <link rel="stylesheet" href="theme/solarized-(dark).css" />
+  <link rel="stylesheet" href="theme/plasticcodewrap.css" />
+  <link rel="stylesheet" href="theme/material-palenight.css" />
+  <link rel="stylesheet" href="theme/bespin.css" />
+  <link rel="stylesheet" href="theme/espresso-tutti.css" />
+  <link rel="stylesheet" href="theme/vibrant-tango.css" />
+  <link rel="stylesheet" href="theme/tubster.css" />
+  <link rel="stylesheet" href="theme/darkpastel.css" />
+  <link rel="stylesheet" href="theme/dawn.css" />
+  <link rel="stylesheet" href="theme/tango.css" />
+  <link rel="stylesheet" href="theme/clouds-midnight.css" />
+  <link rel="stylesheet" href="theme/snip-material.css" />
+
+  <script src="modes/apl/apl.js"></script>
+  <script src="modes/asciiarmor/asciiarmor.js"></script>
+  <script src="modes/asn.1/asn.1.js"></script>
+  <script src="modes/asterisk/asterisk.js"></script>
+  <script src="modes/brainfuck/brainfuck.js"></script>
+  <script src="modes/clike/clike.js"></script>
+  <script src="modes/clojure/clojure.js"></script>
+  <script src="modes/cmake/cmake.js"></script>
+  <script src="modes/cobol/cobol.js"></script>
+  <script src="modes/coffeescript/coffeescript.js"></script>
+  <script src="modes/commonlisp/commonlisp.js"></script>
+  <script src="modes/crystal/crystal.js"></script>
+  <script src="modes/css/css.js"></script>
+  <script src="modes/cypher/cypher.js"></script>
+  <script src="modes/d/d.js"></script>
+  <script src="modes/dart/dart.js"></script>
+  <script src="modes/diff/diff.js"></script>
+  <script src="modes/django/django.js"></script>
+  <script src="modes/dockerfile/dockerfile.js"></script>
+  <script src="modes/dtd/dtd.js"></script>
+  <script src="modes/dylan/dylan.js"></script>
+  <script src="modes/ebnf/ebnf.js"></script>
+  <script src="modes/ecl/ecl.js"></script>
+  <script src="modes/eiffel/eiffel.js"></script>
+  <script src="modes/elm/elm.js"></script>
+  <script src="modes/erlang/erlang.js"></script>
+  <script src="modes/factor/factor.js"></script>
+  <script src="modes/fcl/fcl.js"></script>
+  <script src="modes/forth/forth.js"></script>
+  <script src="modes/fortran/fortran.js"></script>
+  <script src="modes/gas/gas.js"></script>
+  <script src="modes/gfm/gfm.js"></script>
+  <script src="modes/gherkin/gherkin.js"></script>
+  <script src="modes/go/go.js"></script>
+  <script src="modes/groovy/groovy.js"></script>
+  <script src="modes/haml/haml.js"></script>
+  <script src="modes/handlebars/handlebars.js"></script>
+  <script src="modes/haskell/haskell.js"></script>
+  <script src="modes/haskell-literate/haskell-literate.js"></script>
+  <script src="modes/haxe/haxe.js"></script>
+  <script src="modes/htmlembedded/htmlembedded.js"></script>
+  <script src="modes/htmlmixed/htmlmixed.js"></script>
+  <script src="modes/http/http.js"></script>
+  <script src="modes/idl/idl.js"></script>
+  <script src="modes/javascript/javascript.js"></script>
+  <script src="modes/jinja2/jinja2.js"></script>
+  <script src="modes/jsx/jsx.js"></script>
+  <script src="modes/julia/julia.js"></script>
+  <script src="modes/livescript/livescript.js"></script>
+  <script src="modes/lua/lua.js"></script>
+  <script src="modes/markdown/markdown.js"></script>
+  <script src="modes/mathematica/mathematica.js"></script>
+  <script src="modes/mbox/mbox.js"></script>
+  <script src="modes/mirc/mirc.js"></script>
+  <script src="modes/mllike/mllike.js"></script>
+  <script src="modes/modelica/modelica.js"></script>
+  <script src="modes/mscgen/mscgen.js"></script>
+  <script src="modes/mumps/mumps.js"></script>
+  <script src="modes/nginx/nginx.js"></script>
+  <script src="modes/nsis/nsis.js"></script>
+  <script src="modes/ntriples/ntriples.js"></script>
+  <script src="modes/octave/octave.js"></script>
+  <script src="modes/oz/oz.js"></script>
+  <script src="modes/pascalpascal.js"></script>
+  <script src="modes/pegjs/pegjs.js"></script>
+  <script src="modes/perl/perl.js"></script>
+  <script src="modes/php/php.js"></script>
+  <script src="modes/pig/pig.js"></script>
+  <script src="modes/powershell/powershell.js"></script>
+  <script src="modes/properties/properties.js"></script>
+  <script src="modes/protobuf/protobuf.js"></script>
+  <script src="modes/pug/pug.js"></script>
+  <script src="modes/puppet/puppet.js"></script>
+  <script src="modes/python/python.js"></script>
+  <script src="modes/q/q.js"></script>
+  <script src="modes/r/r.js"></script>
+  <script src="modes/rpm/rpm.js"></script>
+  <script src="modes/rst/rst.js"></script>
+  <script src="modes/ruby/ruby.js"></script>
+  <script src="modes/rust/rust.js"></script>
+  <script src="modes/sas/sas.js"></script>
+  <script src="modes/sass/sass.js"></script>
+  <script src="modes/scheme/scheme.js"></script>
+  <script src="modes/shell/shell.js"></script>
+  <script src="modes/sieve/sieve.js"></script>
+  <script src="modes/slim/slim.js"></script>
+  <script src="modes/smalltalk/smalltalk.js"></script>
+  <script src="modes/smarty/smarty.js"></script>
+  <script src="modes/solr/solr.js"></script>
+  <script src="modes/soy/soy.js"></script>
+  <script src="modes/sparql/sparql.js"></script>
+  <script src="modes/spreadsheet/spreadsheet.js"></script>
+  <script src="modes/sql/sql.js"></script>
+  <script src="modes/stex/stex.js"></script>
+  <script src="modes/stylus/stylus.js"></script>
+  <script src="modes/swift/swift.js"></script>
+  <script src="modes/tcl/tcl.js"></script>
+  <script src="modes/textile/textile.js"></script>
+  <script src="modes/tiddlywiki/tiddlywiki.js"></script>
+  <script src="modes/tiki/tiki.js"></script>
+  <script src="modes/toml/toml.js"></script>
+  <script src="modes/tornado/tornado.js"></script>
+  <script src="modes/troff/troff.js"></script>
+  <script src="modes/ttcn/ttcn.js"></script>
+  <script src="modes/ttcn-cfg/ttcn-cfg.js"></script>
+  <script src="modes/turtle/turtle.js"></script>
+  <script src="modes/twig/twig.js"></script>
+  <script src="modes/vb/vb.js"></script>
+  <script src="modes/vbscript/vbscript.js"></script>
+  <script src="modes/velocity/velocity.js"></script>
+  <script src="modes/verilog/verilog.js"></script>
+  <script src="modes/vhdl/vhdl.js"></script>
+  <script src="modes/vue/vue.js"></script>
+  <script src="modes/webidl/webidl.js"></script>
+  <script src="modes/xml/xml.js"></script>
+  <script src="modes/xquery/xquery.js"></script>
+  <script src="modes/yacas/yacas.js"></script>
+  <script src="modes/yaml/yaml.js"></script>
+  <script src="modes/yaml-frontmatter/yaml-frontmatter.js"></script>
+  <script src="modes/z80/z80.js"></script>
+
+</head>
+<style>
+  html,
+  body {
+    margin: 0px;
+    padding: 0px;
+    width: 100%;
+    height: 100%;
+  }
+
+  .CodeMirror {
+    width: 100%;
+    height: 100%;
+  }
+</style>
+
+<body>
+  <script>
+
+    CodeMirror.keyMap["default"]["Cmd-/"] = "toggleComment";  // Add-on
+
+    var editor = CodeMirror(document.body, {
+      lineNumbers: true,
+      autofocus: true,
+      mode: "text/html",
+      theme: "material-palenight",
+      foldGutter: true,
+      showInvisibles: true,
+      maxInvisibles: 16,
+      autoCloseTags: true,
+      smartIndent: true,
+      tabSize: 2,
+      indentUnit: 2,
+      lineWrapping: true,
+      readOnly: false,
+      autoCloseBrackets: true,
+      selectionPointer: true,
+      gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"],
+      extraKeys: {
+        "Cmd-F": "findPersistent",
+        "Ctrl-Space": "autocomplete",
+        "Ctrl-I": "indentAuto"
+      },
+      styleActiveLine: true,
+      foldOptions: {
+        widget: customFoldMarker
+      }
+    });
+    editor.on("change", function (instance, change) {
+      var content = GetContent();
+      window.webkit.messageHandlers.codeMirrorTextContentDidChange.postMessage(content);
+    });
+
+    function customFoldMarker(from, to) {
+      var count = undefined;
+
+      // Get open / close token
+      var startToken = '{', endToken = '}';
+      var prevLine = editor.getLine(from.line);
+      if (prevLine.lastIndexOf('[') > prevLine.lastIndexOf('{')) {
+        startToken = '[', endToken = ']';
+      }
+
+      // Get json content
+      var internal = editor.getRange(from, to);
+      var toParse = startToken + internal + endToken;
+
+      // Get key count
+      try {
+        var parsed = JSON.parse(toParse);
+        count = Object.keys(parsed).length;
+      } catch (e) { }
+
+      return count ? `\u21A4 ${count} \u21A6` : '\u2194';
     }
 
-    .CodeMirror {
-      width: 100%;
-      height: 100%;
+    function getStringFromHex(content) {
+      return decodeURIComponent(content.replace(/\s+/g, '').replace(/[0-9a-f]{2}/g, '%$&'));
     }
 
-  </style>
-  <body>
-    <script>
-      
-      CodeMirror.keyMap["default"]["Cmd-/"] = "toggleComment";  // Add-on
-      
-      var editor = CodeMirror(document.body, {
-        lineNumbers: true,
-        autofocus: true,
-        mode: "text/html",
-        theme: "material-palenight",
-        foldGutter: true,
-        showInvisibles: true,
-        maxInvisibles: 16,
-        autoCloseTags: true,
-        smartIndent: true,
-        tabSize: 2,
-        indentUnit: 2,
-        lineWrapping: true,
-        readOnly: false,
-        autoCloseBrackets: true,
-        selectionPointer: true,
-        gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"],
-        extraKeys: {
-          "Cmd-F": "findPersistent",
-          "Ctrl-Space": "autocomplete",
-          "Ctrl-I": "indentAuto"
-        },
-        styleActiveLine: true
-      });
-      editor.on("change", function(instance, change) {
-          var content = GetContent();
-          window.webkit.messageHandlers.codeMirrorTextContentDidChange.postMessage(content);
-      });
-    
-      function getStringFromHex(content) {
-        return decodeURIComponent(content.replace(/\s+/g, '').replace(/[0-9a-f]{2}/g, '%$&'));
-      }
+    function SupportedMimeTypes() {
+      return Object.keys(CodeMirror.mimeModes).join(",");
+    }
 
-      function SupportedMimeTypes() {
-        return Object.keys(CodeMirror.mimeModes).join(",");
-      }
+    function SetMimeType(type) {
+      editor.setOption("mode", type);
+    }
 
-      function SetMimeType(type) {
-        editor.setOption("mode", type);
-      }
+    function GetMimeType() {
+      return editor.getOption("mode");
+    }
 
-      function GetMimeType() {
-        return editor.getOption("mode");
-      }
+    function SetLineWrapping(wrapping) {
+      editor.setOption("lineWrapping", wrapping);
+    }
 
-      function SetLineWrapping(wrapping) {
-        editor.setOption("lineWrapping", wrapping);
-      }
+    function SetReadOnly(readOnly) {
+      editor.setOption("readOnly", readOnly);
+    }
 
-      function SetReadOnly(readOnly) {
-          editor.setOption("readOnly", readOnly);
-      }
+    function GetLineWrapping() {
+      return editor.getOption("lineWrapping");
+    }
 
-      function GetLineWrapping() {
-        return editor.getOption("lineWrapping");
-      }
+    function SetIndentUnit(unit) {
+      editor.setOption("indentUnit", unit);
+    }
 
-      function SetIndentUnit(unit) {
-        editor.setOption("indentUnit", unit);
-      }
+    function SetTheme(text) {
+      editor.setOption("theme", text);
+    }
 
-      function SetTheme(text) {
-        editor.setOption("theme", text);
-      }
+    function GetIndentUnit() {
+      return editor.getOption("indentUnit");
+    }
 
-      function GetIndentUnit() {
-        return editor.getOption("indentUnit");
-      }
+    function GetReadOnly() {
+      return editor.getOption("readOnly");
+    }
 
-      function GetReadOnly() {
-          return editor.getOption("readOnly");
-      }
-    
-      function ToggleInvisible(toggle) {
-        editor.setOption("showInvisibles", toggle);
-        editor.refresh();
-      }
+    function ToggleInvisible(toggle) {
+      editor.setOption("showInvisibles", toggle);
+      editor.refresh();
+    }
 
-      function SetTabSize(size) {
-        editor.setOption("tabSize", size);
+    function SetTabSize(size) {
+      editor.setOption("tabSize", size);
+    }
+
+    function GetTabSize() {
+      return editor.getOption("tabSize");
+    }
+
+    function SetTabInsertSpaces(flag) {
+      // See http://codemirror.net/doc/manual.html#keymaps
+      if (flag) {
+        CodeMirror.keyMap["basic"]["Tab"] = function (cm) {
+          var spaces = Array(cm.getOption("indentUnit") + 1).join(" ");
+          cm.replaceSelection(spaces, "end", "+input");
+        };
+      } else {
+        CodeMirror.keyMap["basic"]["Tab"] = "defaultTab";
       }
+    }
 
-      function GetTabSize() {
-        return editor.getOption("tabSize");
-      }
+    function GetTabInsertSpaces() {
+      return CodeMirror.keyMap["basic"]["Tab"] == "defaultTab";
+    }
 
-      function SetTabInsertSpaces(flag) {
-        // See http://codemirror.net/doc/manual.html#keymaps
-        if (flag) {
-          CodeMirror.keyMap["basic"]["Tab"] = function(cm) {
-            var spaces = Array(cm.getOption("indentUnit") + 1).join(" ");
-            cm.replaceSelection(spaces, "end", "+input");
-          };
-        } else {
-          CodeMirror.keyMap["basic"]["Tab"] = "defaultTab";
-        }
-      }
+    function SetContent(content) {
+      var text = getStringFromHex(content);
+      editor.doc.setValue(text);
+      editor.doc.clearHistory();
+      editor.doc.markClean();
+    }
 
-      function GetTabInsertSpaces() {
-        return CodeMirror.keyMap["basic"]["Tab"] == "defaultTab";
-      }
+    function GetContent() {
+      return editor.doc.getValue();
+    }
 
-      function SetContent(content) {
-        var text = getStringFromHex(content);
-        editor.doc.setValue(text);
-        editor.doc.clearHistory();
-        editor.doc.markClean();
-      }
+    function ClearHistory() {
+      editor.doc.clearHistory();
+      editor.doc.markClean();
+    }
 
-      function GetContent() {
-        return editor.doc.getValue();
-      }
+    function IsClean() {
+      return editor.doc.isClean();
+    }
 
-      function ClearHistory() {
-        editor.doc.clearHistory();
-        editor.doc.markClean();
-      }
+    function GetTextSelection() {
+      return editor.getSelection();
+    }
 
-      function IsClean() {
-        return editor.doc.isClean();
-      }
+    function SetFontSize(size) {
+      editor.getWrapperElement().style["font-size"] = size + "px";
+      editor.refresh();
+    }
 
-      function GetTextSelection() {
-        return editor.getSelection();
-      }
+    window.webkit.messageHandlers.codeMirrorIsReady.postMessage(null); // Need at lead 1 arg
 
-      function SetFontSize(size) {
-        editor.getWrapperElement().style["font-size"] = size+"px";
-        editor.refresh();
-      }
+  </script>
+</body>
 
-      window.webkit.messageHandlers.codeMirrorIsReady.postMessage(null); // Need at lead 1 arg
-
-    </script>
-  </body>
 </html>

@@ -35,6 +35,9 @@ public struct CodeView: RepresentableView {
   var onLoadSuccess: (() -> ())?
   var onLoadFail: ((Error) -> ())?
   var onContentChange: ((String) -> ())?
+  var onCoordinatorReady: ((CodeViewController) -> ())?
+  
+  private var coordinator: CodeViewController?
   
   
   public init(theme: CodeViewTheme = CodeViewTheme.materialPalenight,
@@ -80,7 +83,10 @@ public struct CodeView: RepresentableView {
   #endif
   
   public func makeCoordinator() -> CodeViewController {
-    CodeViewController(self)
+    let coordinator = CodeViewController(self)
+    self.coordinator = coordinator
+    onCoordinatorReady?(coordinator)
+    return coordinator
   }
   
 }
@@ -108,6 +114,13 @@ extension CodeView {
     copy.onContentChange = action
     return copy
   }
+  
+  public func onCoordinatorReady(_ action: @escaping (CodeViewController) -> Void) -> Self {
+    var copy = self
+    copy.onCoordinatorReady = action
+    return copy
+  }
+
 }
 
 

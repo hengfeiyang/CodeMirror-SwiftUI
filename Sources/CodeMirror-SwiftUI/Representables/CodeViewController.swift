@@ -13,7 +13,7 @@ import WebKit
 
 // MARK: - JavascriptFunction
 
-typealias JavascriptCallback = (Result<Any?, Error>) -> Void
+public typealias JavascriptCallback = (Result<Any?, Error>) -> Void
 private struct JavascriptFunction {
   
   let functionString: String
@@ -192,8 +192,12 @@ extension CodeViewController {
     callJavascript(javascriptString: jsString)
   }
   
-  func getTextSelection(_ block: JavascriptCallback?) {
+  public func getTextSelection(_ block: JavascriptCallback?) {
     callJavascript(javascriptString: "GetTextSelection();", callback: block)
   }
   
+  public func validateJSON(_ block: JavascriptCallback?) {
+    callJavascript(javascriptString: "ValidateJSON();", callback: block)
+  }
+
 }

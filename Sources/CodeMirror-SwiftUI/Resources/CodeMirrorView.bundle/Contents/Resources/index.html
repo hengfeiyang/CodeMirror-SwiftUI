@@ -449,6 +449,21 @@
       editor.refresh();
     }
 
+    // Validate JSON
+    function ValidateJSON() {
+      try {
+          const currentValue = editor.getValue();
+          if (!currentValue.trim()) { 
+              return "";
+          }
+          
+          JSON.parse(currentValue);
+          return "";
+      } catch (error) {
+          return error.message;
+      }
+    }
+
     window.webkit.messageHandlers.codeMirrorIsReady.postMessage(null); // Need at lead 1 arg
 
   </script>

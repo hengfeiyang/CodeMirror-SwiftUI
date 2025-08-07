@@ -37,8 +37,6 @@ public struct CodeView: RepresentableView {
   var onContentChange: ((String) -> ())?
   var onCoordinatorReady: ((CodeViewController) -> ())?
   
-  private var coordinator: CodeViewController?
-  
   
   public init(theme: CodeViewTheme = CodeViewTheme.materialPalenight,
               code: Binding<String>,
@@ -84,7 +82,6 @@ public struct CodeView: RepresentableView {
   
   public func makeCoordinator() -> CodeViewController {
     let coordinator = CodeViewController(self)
-    self.coordinator = coordinator
     onCoordinatorReady?(coordinator)
     return coordinator
   }

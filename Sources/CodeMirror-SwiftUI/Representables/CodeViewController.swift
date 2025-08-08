@@ -184,7 +184,7 @@ extension CodeViewController {
     setMimeType("application/json")
   }
   
-  func setReadonly(_ value: String) {
+  public func setReadonly(_ value: String) {
     var jsString = "SetReadOnly(\(value));"
     if value == "nocursor" {
         jsString = "SetReadOnly(\"\(value)\");"

@@ -33,13 +33,13 @@
 
 .cm-s-devhelper-night .CodeMirror-activeline-gutter,
 .cm-s-devhelper-night .CodeMirror-activeline-background {
-  background: #2C2C2C;
+  background: #505050;
 }
 
 .cm-s-devhelper-night.CodeMirror-focused div.CodeMirror-selected,
 .cm-s-devhelper-night.CodeMirror-focused .CodeMirror-activeline-gutter,
 .cm-s-devhelper-night.CodeMirror-focused .CodeMirror-activeline-background {
-  background-color: rgba(130, 130, 130, 0.1);
+  background-color: #505050;
 }
 
 .cm-s-devhelper-night .cm-keyword {

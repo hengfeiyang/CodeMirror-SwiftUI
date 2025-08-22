@@ -1,0 +1,713 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CodeMirror JSON Editor Demo</title>
+
+    <!-- CodeMirror CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/codemirror.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/addon/fold/foldgutter.css" />
+    <link rel="stylesheet" href="./devhelper-night.css" />
+
+    <style>
+        body {
+            font-family:
+                -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+                sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 2.5em;
+            font-weight: 300;
+        }
+
+        .header p {
+            margin: 10px 0 0 0;
+            opacity: 0.9;
+            font-size: 1.1em;
+        }
+
+        .controls {
+            padding: 20px;
+            background: #f8f9fa;
+            border-bottom: 1px solid #e9ecef;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #5a6fd8;
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+            transform: translateY(-1px);
+        }
+
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #218838;
+            transform: translateY(-1px);
+        }
+
+        .btn-warning {
+            background: #ffc107;
+            color: #212529;
+        }
+
+        .btn-warning:hover {
+            background: #e0a800;
+            transform: translateY(-1px);
+        }
+
+        .editor-container {
+            position: relative;
+            height: 600px;
+        }
+
+        .CodeMirror {
+            height: 100%;
+            font-size: 14px;
+            font-family:
+                "Fira Code", "Monaco", "Menlo", "Ubuntu Mono", monospace;
+        }
+
+        /* Custom fold marker styling */
+        .CodeMirror-foldmarker {
+            color: #888 !important;
+            font-size: 11px !important;
+            font-weight: bold !important;
+            cursor: pointer !important;
+            padding: 0 2px !important;
+            border-radius: 2px !important;
+            transition: all 0.2s ease !important;
+            font-family:
+                "Monaco", "Menlo", "Ubuntu Mono", monospace !important;
+            text-shadow: none !important;
+        }
+
+        .CodeMirror-foldmarker:hover {
+            background: rgba(255, 255, 255, 0.2) !important;
+            color: #fff !important;
+        }
+
+        /* Style for collapsed fold markers */
+        .CodeMirror-foldmarker[title*="Collapsed"] {
+            background: rgba(255, 255, 255, 0.1) !important;
+            color: #4caf50 !important;
+        }
+
+        .CodeMirror-foldmarker[title*="Collapsed"]:hover {
+            background: rgba(76, 175, 80, 0.3) !important;
+            color: #fff !important;
+        }
+
+        .status-bar {
+            padding: 10px 20px;
+            background: #f8f9fa;
+            border-top: 1px solid #e9ecef;
+            font-size: 12px;
+            color: #6c757d;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .error-message {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+            border: 1px solid #f5c6cb;
+            display: none;
+        }
+
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+            border: 1px solid #c3e6cb;
+            display: none;
+        }
+
+        .sample-data {
+            margin-top: 10px;
+            font-size: 12px;
+            color: #6c757d;
+        }
+
+        .sample-data select {
+            padding: 5px;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            margin-left: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📝 CodeMirror JSON Editor</h1>
+            <p>
+                Edit, format, and validate JSON with syntax highlighting,
+                line numbers, and code folding.
+            </p>
+        </div>
+
+        <div class="controls">
+            <button class="btn btn-primary" onclick="formatJSON()">
+                Format JSON
+            </button>
+            <button class="btn btn-secondary" onclick="validateJSON()">
+                Validate JSON
+            </button>
+            <button class="btn btn-success" onclick="foldAll()">
+                Fold All
+            </button>
+            <button class="btn btn-warning" onclick="unfoldAll()">
+                Unfold All
+            </button>
+            <button class="btn btn-secondary" onclick="clearEditor()">
+                Clear
+            </button>
+
+            <div class="sample-data">
+                <label for="sampleSelect">Load Sample:</label>
+                <select id="sampleSelect" onchange="loadSample()">
+                    <option value="">Choose a sample...</option>
+                    <option value="simple">Simple Object</option>
+                    <option value="nested">Nested Object</option>
+                    <option value="array">Array of Objects</option>
+                    <option value="complex">Complex Structure</option>
+                </select>
+            </div>
+        </div>
+
+        <div id="errorMessage" class="error-message"></div>
+        <div id="successMessage" class="success-message"></div>
+
+        <div class="editor-container">
+            <textarea id="jsonEditor"></textarea>
+        </div>
+
+        <div class="status-bar">
+            <span id="lineInfo">Line 1, Column 1</span>
+            <span id="charCount">0 characters</span>
+        </div>
+    </div>
+
+    <!-- Merge View Section -->
+    <div class="container" style="margin-top: 40px">
+        <div class="header">
+            <h1>🔀 CodeMirror Merge View Examples</h1>
+            </p>
+        </div>
+
+        <div id="mergeContainer" style="margin-top: 20px; min-height: 400px">
+            <div style="padding: 20px; text-align: center; color: #666;">
+                <p>Loading CodeMirror merge addon...</p>
+                <p style="font-size: 12px; margin-top: 10px;">
+                    Using CodeMirror 5 with merge addon from cdnjs.cloudflare.com
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- CodeMirror JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/mode/javascript/javascript.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/addon/edit/closebrackets.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/addon/edit/matchbrackets.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/addon/edit/trailingspace.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/addon/fold/foldcode.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/addon/fold/foldgutter.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/addon/fold/brace-fold.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/addon/fold/indent-fold.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/addon/selection/active-line.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/addon/display/placeholder.min.js"></script>
+
+    <!-- CodeMirror 6 for Merge Views -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/diff_match_patch/20121119/diff_match_patch.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/addon/merge/merge.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/addon/merge/merge.css" />
+
+
+    <script>
+        // Initialize CodeMirror
+        const editor = CodeMirror.fromTextArea(
+            document.getElementById("jsonEditor"),
+            {
+                mode: "application/json",
+                theme: "",
+                lineNumbers: true,
+                foldGutter: true,
+                gutters: [
+                    "CodeMirror-linenumbers",
+                    "CodeMirror-foldgutter",
+                ],
+                autoCloseBrackets: true,
+                matchBrackets: true,
+                indentUnit: 2,
+                tabSize: 2,
+                indentWithTabs: false,
+                lineWrapping: false,
+                styleActiveLine: true,
+                placeholder:
+                    'Enter your JSON here...\n\nExample:\n{\n  "name": "John Doe",\n  "age": 30,\n  "city": "New York"\n}',
+                foldOptions: {
+                    widget: customFoldMarker,
+                },
+            },
+        );
+
+        function customFoldMarker(from, to) {
+            var count = undefined;
+
+            // Get open / close token
+            var startToken = "{",
+                endToken = "}";
+            var prevLine = editor.getLine(from.line);
+            if (prevLine.lastIndexOf("[") > prevLine.lastIndexOf("{")) {
+                ((startToken = "["), (endToken = "]"));
+            }
+
+            // Get json content
+            var internal = editor.getRange(from, to);
+            var toParse = startToken + internal + endToken;
+
+            // Get key count
+            try {
+                var parsed = JSON.parse(toParse);
+                count = Object.keys(parsed).length;
+            } catch (e) { }
+
+            return count ? `\u21A4 ${count} \u21A6` : "\u2194";
+        }
+
+        // Sample JSON data
+        const samples = {
+            simple: {
+                query: {
+                    sql: "select * from default where  match_all('google')",
+                    start_time: 1750849453571000,
+                    end_time: 1753441453562000,
+                    from: 0,
+                    size: 1,
+                },
+            },
+            nested: {
+                user: {
+                    id: 1,
+                    profile: {
+                        firstName: "John",
+                        lastName: "Doe",
+                        avatar: "https://example.com/avatar.jpg",
+                    },
+                    preferences: {
+                        theme: "dark",
+                        notifications: true,
+                    },
+                },
+                metadata: {
+                    createdAt: "2024-01-15T10:30:00Z",
+                    updatedAt: "2024-01-20T14:45:00Z",
+                },
+            },
+            array: [
+                {
+                    id: 1,
+                    name: "Product A",
+                    price: 29.99,
+                    category: "Electronics",
+                    inStock: true,
+                },
+                {
+                    id: 2,
+                    name: "Product B",
+                    price: 49.99,
+                    category: "Books",
+                    inStock: false,
+                },
+                {
+                    id: 3,
+                    name: "Product C",
+                    price: 19.99,
+                    category: "Clothing",
+                    inStock: true,
+                },
+            ],
+            complex: {
+                api: {
+                    version: "1.0.0",
+                    endpoints: [
+                        {
+                            path: "/users",
+                            method: "GET",
+                            description: "Retrieve all users",
+                            parameters: {
+                                page: "number",
+                                limit: "number",
+                                sort: "string",
+                            },
+                            responses: {
+                                200: {
+                                    type: "array",
+                                    items: {
+                                        type: "object",
+                                        properties: {
+                                            id: { type: "integer" },
+                                            name: { type: "string" },
+                                            email: { type: "string" },
+                                        },
+                                    },
+                                },
+                                400: {
+                                    type: "object",
+                                    properties: {
+                                        error: { type: "string" },
+                                        code: { type: "integer" },
+                                    },
+                                },
+                            },
+                        },
+                    ],
+                },
+                settings: {
+                    database: {
+                        host: "localhost",
+                        port: 5432,
+                        name: "myapp",
+                        pool: {
+                            min: 5,
+                            max: 20,
+                            acquire: 30000,
+                            idle: 10000,
+                        },
+                    },
+                    cache: {
+                        redis: {
+                            host: "localhost",
+                            port: 6379,
+                            ttl: 3600,
+                        },
+                    },
+                },
+            },
+        };
+
+        // Load sample data
+        function loadSample() {
+            const select = document.getElementById("sampleSelect");
+            const sampleKey = select.value;
+
+            if (sampleKey && samples[sampleKey]) {
+                const jsonString = JSON.stringify(
+                    samples[sampleKey],
+                    null,
+                    2,
+                );
+                editor.setValue(jsonString);
+                showSuccess("Sample data loaded successfully!");
+                select.value = "";
+            }
+        }
+
+        // Format JSON
+        function formatJSON() {
+            try {
+                const currentValue = editor.getValue();
+                if (!currentValue.trim()) {
+                    showError(
+                        "Editor is empty. Please enter some JSON first.",
+                    );
+                    return;
+                }
+
+                const parsed = JSON.parse(currentValue);
+                const formatted = JSON.stringify(parsed, null, 2);
+                editor.setValue(formatted);
+                showSuccess("JSON formatted successfully!");
+            } catch (error) {
+                showError("Invalid JSON: " + error.message);
+            }
+        }
+
+        // Validate JSON
+        function validateJSON() {
+            try {
+                const currentValue = editor.getValue();
+                if (!currentValue.trim()) {
+                    showError(
+                        "Editor is empty. Please enter some JSON first.",
+                    );
+                    return;
+                }
+
+                JSON.parse(currentValue);
+                showSuccess("JSON is valid!");
+            } catch (error) {
+                showError("Invalid JSON: " + error.message);
+            }
+        }
+
+        // Fold all code
+        function foldAll() {
+            editor.execCommand("foldAll");
+            showSuccess("All code folded!");
+        }
+
+        // Unfold all code
+        function unfoldAll() {
+            editor.execCommand("unfoldAll");
+            showSuccess("All code unfolded!");
+        }
+
+        // Clear editor
+        function clearEditor() {
+            editor.setValue("");
+            hideMessages();
+        }
+
+        // Show error message
+        function showError(message) {
+            const errorDiv = document.getElementById("errorMessage");
+            errorDiv.textContent = message;
+            errorDiv.style.display = "block";
+            document.getElementById("successMessage").style.display =
+                "none";
+        }
+
+        // Show success message
+        function showSuccess(message) {
+            const successDiv = document.getElementById("successMessage");
+            successDiv.textContent = message;
+            successDiv.style.display = "block";
+            document.getElementById("errorMessage").style.display = "none";
+        }
+
+        // Hide all messages
+        function hideMessages() {
+            document.getElementById("errorMessage").style.display = "none";
+            document.getElementById("successMessage").style.display =
+                "none";
+        }
+
+        // Update status bar
+        function updateStatus() {
+            const cursor = editor.getCursor();
+            const lineInfo = document.getElementById("lineInfo");
+            const charCount = document.getElementById("charCount");
+
+            lineInfo.textContent = `Line ${cursor.line + 1}, Column ${cursor.ch + 1}`;
+            charCount.textContent = `${editor.getValue().length} characters`;
+        }
+
+        // Event listeners
+        editor.on("cursorActivity", updateStatus);
+        editor.on("change", updateStatus);
+
+        // Initialize status
+        updateStatus();
+
+        // Load a default sample on page load
+        window.addEventListener("load", function () {
+            const defaultSample = JSON.stringify(samples.simple, null, 2);
+            editor.setValue(defaultSample);
+
+            // Check if merge views are working
+            setTimeout(() => {
+                const container = document.getElementById("mergeContainer");
+                if (
+                    container.innerHTML.includes("Loading CodeMirror 6") ||
+                    container.innerHTML.includes("Error loading")
+                ) {
+                    container.innerHTML = `
+                            <div style="padding: 20px; text-align: center; color: #e74c3c; background: #f8f9fa; border: 1px solid #dee2e6; border-radius: 6px;">
+                                <h3>Merge View Unavailable</h3>
+                                <p>The CodeMirror 6 merge libraries couldn't be loaded from the CDN.</p>
+                                <p>This mightry refreshing the page or check your internet connection.</p>
+                                <button onclick="window.location.reload()" class="btn btn-primary" style="margin-top: 10px;">
+                                    Refresh Page
+                                </button>
+                            </div>
+                        `;
+                }
+            }, 3000);
+        });
+    </script>
+
+    <script>
+
+        // Sample data for merge views - more realistic examples
+        const originalCode = `function calculateTotal(items) {
+let total = 0;
+for (let item of items) {
+total += item.price;
+}
+return total;
+}
+
+const products = [
+{ name: "Laptop", price: 999 },
+{ name: "Mouse", price: 25 },
+{ name: "Keyboard", price: 75 }
+];
+
+console.log("Total:", calculateTotal(products));`;
+
+        const modifiedCode = `function calculateTotal(items) {
+let total = 0;
+let tax = 0;
+for (let item of items) {
+total += item.price;
+tax += item.price * 0.08; // Add 8% tax
+}
+return { total, tax, grandTotal: total + tax };
+}
+
+const products = [
+{ name: "Laptop", price: 999 },
+{ name: "Mouse", price: 25 },
+{ name: "Keyboard", price: 75 },
+{ name: "Monitor", price: 299 } // New item
+];
+
+const result = calculateTotal(products);
+console.log("Total:", result.total);
+console.log("Tax:", result.tax);
+console.log("Grand Total:", result.grandTotal);`;
+
+        // Function to show split merge view using CodeMirror 5 merge addon
+        window.showSplitMerge = function () {
+            console.log("showSplitMerge called");
+
+            const container = document.getElementById("mergeContainer");
+
+            // Add labels
+            const labels = document.createElement("div");
+            labels.innerHTML = `
+            <div style="display: flex; margin-bottom: 10px; background: #f8f9fa; padding: 10px; border-radius: 6px;">
+                <div style="flex: 1; text-align: center; font-weight: bold; color: #e74c3c;">Original Version (A)</div>
+                <div style="flex: 1; text-align: center; font-weight: bold; color: #27ae60;">Modified Version (B)</div>
+            </div>
+        `;
+            container.appendChild(labels);
+
+            try {
+                // Check if CodeMirror merge addon is available
+                if (typeof CodeMirror.MergeView === 'undefined') {
+                    throw new Error("CodeMirror merge addon not loaded");
+                }
+
+                // Create merge view using CodeMirror 5 merge addon
+                const mergeView = CodeMirror.MergeView(container, {
+                    value: originalCode,
+                    origLeft: null,
+                    orig: modifiedCode,
+                    lineNumbers: true,
+                    mode: "javascript",
+                    highlightDifferences: true,
+                    connect: "align",
+                    collapseIdentical: false,
+                    allowEditingOriginals: false
+                });
+
+                // Add info about differences
+                const infoDiv = document.createElement("div");
+                infoDiv.innerHTML = `
+                <div style="margin-top: 15px; padding: 15px; background: #e3f2fd; border: 1px solid #2196f3; border-radius: 6px;">
+                    <h4 style="margin-top: 0; color: #1976d2;">Split Merge View</h4>
+                    <p style="margin-bottom: 0; color: #424242;">Compare the original code (left) with the modified version (right). Key differences include tax calculation, return value changes, and additional product.</p>
+                </div>
+            `;
+                container.appendChild(infoDiv);
+
+            } catch (error) {
+                console.error("Error creating merge view:", error);
+                // Fallback to simple side-by-side view
+                createFallbackMergeView(container);
+            }
+        };
+
+        // Initialize merge views when page loads
+        window.addEventListener("load", function () {
+            // Wait a bit for everything to load, then show default view
+            setTimeout(() => {
+                showSplitMerge();
+            }, 500);
+        });
+
+        // Function to check if CodeMirror merge addon is loaded
+        function checkCodeMirrorStatus() {
+            const status = {
+                codemirror: typeof CodeMirror !== 'undefined',
+                mergeAddon: typeof CodeMirror !== 'undefined' && typeof CodeMirror.MergeView !== 'undefined'
+            };
+
+            console.log('CodeMirror Status:', status);
+            return status;
+        }
+
+        // Check status after a delay to see what loaded
+        setTimeout(checkCodeMirrorStatus, 2000);
+    </script>
+
+</body>
+
+</html>

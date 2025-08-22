@@ -27,10 +27,18 @@
   <script src="addons/fold/indent-fold.js"></script>
   <script src="addons/fold/comment-fold.js"></script>
   <script src="addons/selection/active-line.js"></script>
+  <script src="addons/selection/selection-pointer.js"></script>
   <script src="addons/edit/closebrackets.js"></script>
   <script src="addons/edit/closetag.js"></script>
   <script src="addons/edit/matchtags.js"></script>
   <script src="addons/comment/comment.js"></script>
+  <script src="addons/show-invisibles.js"></script>
+  <script src="addons/hint/css-hint.js"></script>
+  <script src="addons/hint/html-hint.js"></script>
+  <script src="addons/hint/javascript-hint.js"></script>
+  <script src="addons/hint/show-hint.js"></script>
+  <script src="addons/hint/sql-hint.js"></script>
+  <script src="addons/hint/xml-hint.js"></script>
   <script src="addons/merge/merge.js"></script>
   <script src="addons/merge/diff_match_patch.js"></script>
 
@@ -146,20 +154,129 @@
   <link rel="stylesheet" href="theme/snip-material.css" />
   <link rel="stylesheet" href="theme/devhelper-night.css" />
 
-  <!-- Load language modes -->
-  <script src="modes/javascript/javascript.js"></script>
-  <script src="modes/swift/swift.js"></script>
-  <script src="modes/python/python.js"></script>
+  <script src="modes/apl/apl.js"></script>
+  <script src="modes/asciiarmor/asciiarmor.js"></script>
+  <script src="modes/asn.1/asn.1.js"></script>
+  <script src="modes/asterisk/asterisk.js"></script>
+  <script src="modes/brainfuck/brainfuck.js"></script>
   <script src="modes/clike/clike.js"></script>
+  <script src="modes/clojure/clojure.js"></script>
+  <script src="modes/cmake/cmake.js"></script>
+  <script src="modes/cobol/cobol.js"></script>
+  <script src="modes/coffeescript/coffeescript.js"></script>
+  <script src="modes/commonlisp/commonlisp.js"></script>
+  <script src="modes/crystal/crystal.js"></script>
   <script src="modes/css/css.js"></script>
+  <script src="modes/cypher/cypher.js"></script>
+  <script src="modes/d/d.js"></script>
+  <script src="modes/dart/dart.js"></script>
+  <script src="modes/diff/diff.js"></script>
+  <script src="modes/django/django.js"></script>
+  <script src="modes/dockerfile/dockerfile.js"></script>
+  <script src="modes/dtd/dtd.js"></script>
+  <script src="modes/dylan/dylan.js"></script>
+  <script src="modes/ebnf/ebnf.js"></script>
+  <script src="modes/ecl/ecl.js"></script>
+  <script src="modes/eiffel/eiffel.js"></script>
+  <script src="modes/elm/elm.js"></script>
+  <script src="modes/erlang/erlang.js"></script>
+  <script src="modes/factor/factor.js"></script>
+  <script src="modes/fcl/fcl.js"></script>
+  <script src="modes/forth/forth.js"></script>
+  <script src="modes/fortran/fortran.js"></script>
+  <script src="modes/gas/gas.js"></script>
+  <script src="modes/gfm/gfm.js"></script>
+  <script src="modes/gherkin/gherkin.js"></script>
+  <script src="modes/go/go.js"></script>
+  <script src="modes/groovy/groovy.js"></script>
+  <script src="modes/haml/haml.js"></script>
+  <script src="modes/handlebars/handlebars.js"></script>
+  <script src="modes/haskell/haskell.js"></script>
+  <script src="modes/haskell-literate/haskell-literate.js"></script>
+  <script src="modes/haxe/haxe.js"></script>
+  <script src="modes/htmlembedded/htmlembedded.js"></script>
   <script src="modes/htmlmixed/htmlmixed.js"></script>
-  <script src="modes/xml/xml.js"></script>
+  <script src="modes/http/http.js"></script>
+  <script src="modes/idl/idl.js"></script>
+  <script src="modes/javascript/javascript.js"></script>
+  <script src="modes/jinja2/jinja2.js"></script>
+  <script src="modes/jsx/jsx.js"></script>
+  <script src="modes/julia/julia.js"></script>
+  <script src="modes/livescript/livescript.js"></script>
+  <script src="modes/lua/lua.js"></script>
   <script src="modes/markdown/markdown.js"></script>
+  <script src="modes/mathematica/mathematica.js"></script>
+  <script src="modes/mbox/mbox.js"></script>
+  <script src="modes/mirc/mirc.js"></script>
+  <script src="modes/mllike/mllike.js"></script>
+  <script src="modes/modelica/modelica.js"></script>
+  <script src="modes/mscgen/mscgen.js"></script>
+  <script src="modes/mumps/mumps.js"></script>
+  <script src="modes/nginx/nginx.js"></script>
+  <script src="modes/nsis/nsis.js"></script>
+  <script src="modes/ntriples/ntriples.js"></script>
+  <script src="modes/octave/octave.js"></script>
+  <script src="modes/oz/oz.js"></script>
+  <script src="modes/pascalpascal.js"></script>
+  <script src="modes/pegjs/pegjs.js"></script>
+  <script src="modes/perl/perl.js"></script>
+  <script src="modes/php/php.js"></script>
+  <script src="modes/pig/pig.js"></script>
+  <script src="modes/powershell/powershell.js"></script>
+  <script src="modes/properties/properties.js"></script>
+  <script src="modes/protobuf/protobuf.js"></script>
+  <script src="modes/pug/pug.js"></script>
+  <script src="modes/puppet/puppet.js"></script>
+  <script src="modes/python/python.js"></script>
+  <script src="modes/q/q.js"></script>
+  <script src="modes/r/r.js"></script>
+  <script src="modes/rpm/rpm.js"></script>
+  <script src="modes/rst/rst.js"></script>
+  <script src="modes/ruby/ruby.js"></script>
+  <script src="modes/rust/rust.js"></script>
+  <script src="modes/sas/sas.js"></script>
+  <script src="modes/sass/sass.js"></script>
+  <script src="modes/scheme/scheme.js"></script>
+  <script src="modes/shell/shell.js"></script>
+  <script src="modes/sieve/sieve.js"></script>
+  <script src="modes/slim/slim.js"></script>
+  <script src="modes/smalltalk/smalltalk.js"></script>
+  <script src="modes/smarty/smarty.js"></script>
+  <script src="modes/solr/solr.js"></script>
+  <script src="modes/soy/soy.js"></script>
+  <script src="modes/sparql/sparql.js"></script>
+  <script src="modes/spreadsheet/spreadsheet.js"></script>
+  <script src="modes/sql/sql.js"></script>
+  <script src="modes/stex/stex.js"></script>
+  <script src="modes/stylus/stylus.js"></script>
+  <script src="modes/swift/swift.js"></script>
+  <script src="modes/tcl/tcl.js"></script>
+  <script src="modes/textile/textile.js"></script>
+  <script src="modes/tiddlywiki/tiddlywiki.js"></script>
+  <script src="modes/tiki/tiki.js"></script>
+  <script src="modes/toml/toml.js"></script>
+  <script src="modes/tornado/tornado.js"></script>
+  <script src="modes/troff/troff.js"></script>
+  <script src="modes/ttcn/ttcn.js"></script>
+  <script src="modes/ttcn-cfg/ttcn-cfg.js"></script>
+  <script src="modes/turtle/turtle.js"></script>
+  <script src="modes/twig/twig.js"></script>
+  <script src="modes/vb/vb.js"></script>
+  <script src="modes/vbscript/vbscript.js"></script>
+  <script src="modes/velocity/velocity.js"></script>
+  <script src="modes/verilog/verilog.js"></script>
+  <script src="modes/vhdl/vhdl.js"></script>
+  <script src="modes/vue/vue.js"></script>
+  <script src="modes/webidl/webidl.js"></script>
+  <script src="modes/xml/xml.js"></script>
+  <script src="modes/xquery/xquery.js"></script>
+  <script src="modes/yacas/yacas.js"></script>
   <script src="modes/yaml/yaml.js"></script>
+  <script src="modes/yaml-frontmatter/yaml-frontmatter.js"></script>
+  <script src="modes/z80/z80.js"></script>
   <script src="modes/diff/diff.js"></script>
 
 </head>
-
 <style>
   html,
   body {
@@ -167,19 +284,19 @@
     padding: 0px;
     width: 100%;
     height: 100%;
-    overflow: hidden;
   }
 
   #diffContainer {
+    margin: 0px;
+    padding: 0px;
     width: 100%;
     height: 100%;
-    position: absolute;
-    top: 0;
-    left: 0;
+    border: none;
   }
 
   .CodeMirror {
-    height: 100% !important;
+    width: 100%;
+    height: 100%;
   }
 
   .CodeMirror-merge {
@@ -198,9 +315,8 @@
 
   /* Custom styles for diff view */
   .CodeMirror-merge-gap {
-    border-left: 1px solid #ddd;
-    border-right: 1px solid #ddd;
-    background: #f7f7f7;
+    border: none;
+    background: transparent;
     width: 20px !important;
     min-width: 20px;
   }
@@ -221,7 +337,7 @@
 
   <script>
     var mergeView = null;
-    var currentTheme = "material-palenight";
+    var currentTheme = "devhelper-night";
     var currentMode = "text/plain";
     var originalCode = "";
     var modifiedCode = "";
@@ -251,11 +367,12 @@
           connect: "align",
           collapseIdentical: false,
           allowEditingOriginals: true,
-          revertButtons: false
+          revertButtons: false,
+          styleActiveLine: true
         });
 
-        // Notify Swift that diff view is ready
-        if (window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.codeMirrorDiffIsReady) {
+// Notify Swift that diff view is ready
+if (window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.codeMirrorDiffIsReady) {
           window.webkit.messageHandlers.codeMirrorDiffIsReady.postMessage(null);
         }
       } catch (error) {

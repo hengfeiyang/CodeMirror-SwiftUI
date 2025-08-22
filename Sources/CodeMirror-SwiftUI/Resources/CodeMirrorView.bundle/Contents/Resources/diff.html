@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <link rel="stylesheet" href="lib/codemirror.css">
+  <script src="lib/codemirror.js"></script>
+
+  <script src="addons/search.js"></script>
+  <script src="addons/dialog.js"></script>
+
+  <link rel="stylesheet" href="addons/dialog.css">
+  <link rel="stylesheet" href="addons/fold/foldgutter.css" />
+  <link rel="stylesheet" href="addons/hint/show-hint.css" />
+  <link rel="stylesheet" href="addons/merge/merge.css" />
+
+  <script src="addons/display/panel.js"></script>
+  <script src="addons/search/jump-to-line.js"></script>
+  <script src="addons/search/match-highlighter.js"></script>
+  <script src="addons/search/searchcursor.js"></script>
+  <script src="addons/fold/foldcode.js"></script>
+  <script src="addons/fold/foldgutter.js"></script>
+  <script src="addons/fold/brace-fold.js"></script>
+  <script src="addons/fold/xml-fold.js"></script>
+  <script src="addons/fold/indent-fold.js"></script>
+  <script src="addons/fold/comment-fold.js"></script>
+  <script src="addons/selection/active-line.js"></script>
+  <script src="addons/edit/closebrackets.js"></script>
+  <script src="addons/edit/closetag.js"></script>
+  <script src="addons/edit/matchtags.js"></script>
+  <script src="addons/comment/comment.js"></script>
+  <script src="addons/merge/merge.js"></script>
+  <script src="addons/merge/diff_match_patch.js"></script>
+
+  <!-- Load all theme files -->
+  <link rel="stylesheet" href="theme/bbedit.css" />
+  <link rel="stylesheet" href="theme/all-hallow-eve.css" />
+  <link rel="stylesheet" href="theme/idlefingers.css" />
+  <link rel="stylesheet" href="theme/spacecadet.css" />
+  <link rel="stylesheet" href="theme/idle.css" />
+  <link rel="stylesheet" href="theme/oceanic.css" />
+  <link rel="stylesheet" href="theme/clouds.css" />
+  <link rel="stylesheet" href="theme/github.css" />
+  <link rel="stylesheet" href="theme/ryan-light.css" />
+  <link rel="stylesheet" href="theme/black-pearl.css" />
+  <link rel="stylesheet" href="theme/monoindustrial.css" />
+  <link rel="stylesheet" href="theme/happy-happy-joy-joy-2.css" />
+  <link rel="stylesheet" href="theme/cube2media.css" />
+  <link rel="stylesheet" href="theme/friendship-bracelet.css" />
+  <link rel="stylesheet" href="theme/classic-modified.css" />
+  <link rel="stylesheet" href="theme/amy.css" />
+  <link rel="stylesheet" href="theme/demo.css" />
+  <link rel="stylesheet" href="theme/rdark.css" />
+  <link rel="stylesheet" href="theme/espresso.css" />
+  <link rel="stylesheet" href="theme/sunburst.css" />
+  <link rel="stylesheet" href="theme/made-of-code.css" />
+  <link rel="stylesheet" href="theme/arona.css" />
+  <link rel="stylesheet" href="theme/putty.css" />
+  <link rel="stylesheet" href="theme/nightlion.css" />
+  <link rel="stylesheet" href="theme/sidewalkchalk.css" />
+  <link rel="stylesheet" href="theme/swyphs-ii.css" />
+  <link rel="stylesheet" href="theme/iplastic.css" />
+  <link rel="stylesheet" href="theme/cssedit.css" />
+  <link rel="stylesheet" href="theme/solarized-(light).css" />
+  <link rel="stylesheet" href="theme/mac-classic.css" />
+  <link rel="stylesheet" href="theme/pastels-on-dark.css" />
+  <link rel="stylesheet" href="theme/ir_black.css" />
+  <link rel="stylesheet" href="theme/material.css" />
+  <link rel="stylesheet" href="theme/monokai-fannonedition.css" />
+  <link rel="stylesheet" href="theme/monokai-bright.css" />
+  <link rel="stylesheet" href="theme/eiffel.css" />
+  <link rel="stylesheet" href="theme/base16-light.css" />
+  <link rel="stylesheet" href="theme/oceanic-muted.css" />
+  <link rel="stylesheet" href="theme/summerfruit.css" />
+  <link rel="stylesheet" href="theme/espresso-libre.css" />
+  <link rel="stylesheet" href="theme/krtheme.css" />
+  <link rel="stylesheet" href="theme/mreq.css" />
+  <link rel="stylesheet" href="theme/chanfle.css" />
+  <link rel="stylesheet" href="theme/venom.css" />
+  <link rel="stylesheet" href="theme/juicy.css" />
+  <link rel="stylesheet" href="theme/coda.css" />
+  <link rel="stylesheet" href="theme/fluidvision.css" />
+  <link rel="stylesheet" href="theme/tomorrow-night-blue.css" />
+  <link rel="stylesheet" href="theme/magicwb-(amiga).css" />
+  <link rel="stylesheet" href="theme/twilight.css" />
+  <link rel="stylesheet" href="theme/vibrant-ink.css" />
+  <link rel="stylesheet" href="theme/summer-sun.css" />
+  <link rel="stylesheet" href="theme/monokai.css" />
+  <link rel="stylesheet" href="theme/rails-envy.css" />
+  <link rel="stylesheet" href="theme/merbivore.css" />
+  <link rel="stylesheet" href="theme/dracula.css" />
+  <link rel="stylesheet" href="theme/pastie.css" />
+  <link rel="stylesheet" href="theme/lowlight.css" />
+  <link rel="stylesheet" href="theme/spectacular.css" />
+  <link rel="stylesheet" href="theme/smoothy.css" />
+  <link rel="stylesheet" href="theme/vibrant-fin.css" />
+  <link rel="stylesheet" href="theme/blackboard.css" />
+  <link rel="stylesheet" href="theme/slush-&-poppies.css" />
+  <link rel="stylesheet" href="theme/freckle.css" />
+  <link rel="stylesheet" href="theme/fantasyscript.css" />
+  <link rel="stylesheet" href="theme/tomorrow-night-eighties.css" />
+  <link rel="stylesheet" href="theme/rhuk.css" />
+  <link rel="stylesheet" href="theme/toy-chest.css" />
+  <link rel="stylesheet" href="theme/fake.css" />
+  <link rel="stylesheet" href="theme/emacs-strict.css" />
+  <link rel="stylesheet" href="theme/merbivore-soft.css" />
+  <link rel="stylesheet" href="theme/fade-to-grey.css" />
+  <link rel="stylesheet" href="theme/monokai-sublime.css" />
+  <link rel="stylesheet" href="theme/johnny.css" />
+  <link rel="stylesheet" href="theme/railscasts.css" />
+  <link rel="stylesheet" href="theme/argonaut.css" />
+  <link rel="stylesheet" href="theme/tomorrow-night-bright.css" />
+  <link rel="stylesheet" href="theme/lazy.css" />
+  <link rel="stylesheet" href="theme/tomorrow-night.css" />
+  <link rel="stylesheet" href="theme/bongzilla.css" />
+  <link rel="stylesheet" href="theme/glitterbomb.css" />
+  <link rel="stylesheet" href="theme/ir_white.css" />
+  <link rel="stylesheet" href="theme/zenburnesque.css" />
+  <link rel="stylesheet" href="theme/notebook.css" />
+  <link rel="stylesheet" href="theme/django-(smoothy).css" />
+  <link rel="stylesheet" href="theme/blackboard-black.css" />
+  <link rel="stylesheet" href="theme/black-pearl-ii.css" />
+  <link rel="stylesheet" href="theme/kuroir.css" />
+  <link rel="stylesheet" href="theme/cobalt.css" />
+  <link rel="stylesheet" href="theme/ayu-mirage.css" />
+  <link rel="stylesheet" href="theme/chrome-devtools.css" />
+  <link rel="stylesheet" href="theme/prospettiva.css" />
+  <link rel="stylesheet" href="theme/espresso-soda.css" />
+  <link rel="stylesheet" href="theme/birds-of-paradise.css" />
+  <link rel="stylesheet" href="theme/text-ex-machina.css" />
+  <link rel="stylesheet" href="theme/django.css" />
+  <link rel="stylesheet" href="theme/tomorrow.css" />
+  <link rel="stylesheet" href="theme/solarized-(dark).css" />
+  <link rel="stylesheet" href="theme/plasticcodewrap.css" />
+  <link rel="stylesheet" href="theme/material-palenight.css" />
+  <link rel="stylesheet" href="theme/bespin.css" />
+  <link rel="stylesheet" href="theme/espresso-tutti.css" />
+  <link rel="stylesheet" href="theme/vibrant-tango.css" />
+  <link rel="stylesheet" href="theme/tubster.css" />
+  <link rel="stylesheet" href="theme/darkpastel.css" />
+  <link rel="stylesheet" href="theme/dawn.css" />
+  <link rel="stylesheet" href="theme/tango.css" />
+  <link rel="stylesheet" href="theme/clouds-midnight.css" />
+  <link rel="stylesheet" href="theme/snip-material.css" />
+  <link rel="stylesheet" href="theme/devhelper-night.css" />
+
+  <!-- Load language modes -->
+  <script src="modes/javascript/javascript.js"></script>
+  <script src="modes/swift/swift.js"></script>
+  <script src="modes/python/python.js"></script>
+  <script src="modes/clike/clike.js"></script>
+  <script src="modes/css/css.js"></script>
+  <script src="modes/htmlmixed/htmlmixed.js"></script>
+  <script src="modes/xml/xml.js"></script>
+  <script src="modes/markdown/markdown.js"></script>
+  <script src="modes/yaml/yaml.js"></script>
+  <script src="modes/diff/diff.js"></script>
+
+</head>
+
+<style>
+  html,
+  body {
+    margin: 0px;
+    padding: 0px;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+  }
+
+  #diffContainer {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+
+  .CodeMirror {
+    height: 100% !important;
+  }
+
+  .CodeMirror-merge {
+    height: 100% !important;
+    width: 100% !important;
+    position: relative;
+  }
+
+  .CodeMirror-merge .CodeMirror-merge-pane {
+    height: 100% !important;
+  }
+
+  .CodeMirror-merge .CodeMirror {
+    height: 100% !important;
+  }
+
+  /* Custom styles for diff view */
+  .CodeMirror-merge-gap {
+    border-left: 1px solid #ddd;
+    border-right: 1px solid #ddd;
+    background: #f7f7f7;
+    width: 20px !important;
+    min-width: 20px;
+  }
+
+  .CodeMirror-merge-scrolllock {
+    position: absolute;
+    right: 3px;
+    top: 3px;
+    width: 14px;
+    height: 14px;
+    background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAAdgAAAHYBTnsmCAAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAAFYSURBVCiRpZM9SwNBEIafgwQSCxsLwcJCG1sLG0uxsLGwsLGwsLWwsLGwsLWwsLGwsLWwsLGwsLWwsLWwsLGwsLWwsLGwsLWwsLGwsLWwsLGwsLWwsLWwsLWwsLGwsLWwsLGwsLWwsLGwsLWwsLGwsLWwsLGwsLWwsLGwsLWwsLGwsLWwsLGwsLWwsLGwsLWwsLGwsLWwsLGwsLGwsLWwsA==") 0 0;
+    cursor: pointer;
+  }
+</style>
+
+<body>
+  <div id="diffContainer"></div>
+
+  <script>
+    var mergeView = null;
+    var currentTheme = "material-palenight";
+    var currentMode = "text/plain";
+    var originalCode = "";
+    var modifiedCode = "";
+
+    function initializeDiffView() {
+      if (!window.CodeMirror || !window.CodeMirror.MergeView) {
+        console.error("CodeMirror merge addon not loaded");
+        return;
+      }
+
+      var container = document.getElementById("diffContainer");
+      
+      // Clear any existing merge view
+      if (mergeView) {
+        container.innerHTML = "";
+      }
+
+      try {
+        mergeView = CodeMirror.MergeView(container, {
+          value: modifiedCode,
+          origLeft: null,
+          orig: originalCode,
+          lineNumbers: true,
+          mode: currentMode,
+          theme: currentTheme,
+          highlightDifferences: true,
+          connect: "align",
+          collapseIdentical: false,
+          allowEditingOriginals: true,
+          revertButtons: false
+        });
+
+        // Notify Swift that diff view is ready
+        if (window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.codeMirrorDiffIsReady) {
+          window.webkit.messageHandlers.codeMirrorDiffIsReady.postMessage(null);
+        }
+      } catch (error) {
+        console.error("Error creating merge view:", error);
+      }
+    }
+
+    function SetDiffTheme(theme) {
+      currentTheme = theme;
+      if (mergeView) {
+        // Set theme for the modified code editor (right side)
+        if (mergeView.editor) {
+          mergeView.editor().setOption("theme", theme);
+        }
+        // Set theme for the original code editor (left side)
+        if (mergeView.leftOriginal) {
+          mergeView.leftOriginal().setOption("theme", theme);
+        }
+        // In 2-way merge, rightOriginal is the original (left side)
+        if (mergeView.rightOriginal) {
+          mergeView.rightOriginal().setOption("theme", theme);
+        }
+        // Also try setting theme directly on merge view
+        mergeView.setOption && mergeView.setOption("theme", theme);
+      }
+    }
+
+    function SetDiffMimeType(mimeType) {
+      currentMode = mimeType;
+      if (mergeView) {
+        if (mergeView.editor) {
+          mergeView.editor().setOption("mode", mimeType);
+        }
+        if (mergeView.leftOriginal) {
+          mergeView.leftOriginal().setOption("mode", mimeType);
+        }
+        if (mergeView.rightOriginal) {
+          mergeView.rightOriginal().setOption("mode", mimeType);
+        }
+      }
+    }
+
+    function SetOriginalCode(code) {
+      originalCode = code;
+      RefreshDiffView();
+    }
+
+    function SetModifiedCode(code) {
+      modifiedCode = code;
+      RefreshDiffView();
+    }
+
+    function SetDiffFontSize(size) {
+      var style = document.createElement("style");
+      style.textContent = ".CodeMirror { font-size: " + size + "px; }";
+      document.head.appendChild(style);
+      
+      if (mergeView) {
+        if (mergeView.editor) {
+          mergeView.editor().refresh();
+        }
+        if (mergeView.leftOriginal) {
+          mergeView.leftOriginal().refresh();
+        }
+        if (mergeView.rightOriginal) {
+          mergeView.rightOriginal().refresh();
+        }
+      }
+    }
+
+    function SetDiffLineNumbers(show) {
+      if (mergeView) {
+        if (mergeView.editor) {
+          mergeView.editor().setOption("lineNumbers", show);
+        }
+        if (mergeView.leftOriginal) {
+          mergeView.leftOriginal().setOption("lineNumbers", show);
+        }
+        if (mergeView.rightOriginal) {
+          mergeView.rightOriginal().setOption("lineNumbers", show);
+        }
+      }
+    }
+
+    function SetCollapseIdentical(collapse) {
+      if (mergeView) {
+        mergeView.setOption("collapseIdentical", collapse);
+      }
+    }
+
+    function SetAllowEdit(allowEdit) {
+      if (mergeView) {
+        if (mergeView.editor) {
+          mergeView.editor().setOption("readOnly", !allowEdit);
+        }
+        if (mergeView.leftOriginal) {
+          mergeView.leftOriginal().setOption("readOnly", !allowEdit); // Allow editing based on allowEdit parameter
+        }
+        if (mergeView.rightOriginal) {
+          mergeView.rightOriginal().setOption("readOnly", !allowEdit); // Allow editing based on allowEdit parameter
+        }
+      }
+    }
+
+    function RefreshDiffView() {
+      initializeDiffView();
+    }
+
+    // Initialize on load
+    window.addEventListener("load", function() {
+      initializeDiffView();
+    });
+  </script>
+</body>
+
+</html>

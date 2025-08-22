@@ -132,3 +132,45 @@
   text-decoration: underline;
   color: white !important;
 }
+
+/* Diff/Merge view specific styles for better visibility */
+.cm-s-devhelper-night .CodeMirror-merge-gap {
+  background-color: #2C2C2C;
+}
+
+/* Changed text highlighting - Override default backgrounds from merge.css */
+.cm-s-devhelper-night .CodeMirror-merge-r-chunk {
+  background-color: rgba(189, 177, 95, 0.3)!important; /* Semi-transparent green instead of #ffffe0 */
+}
+
+.cm-s-devhelper-night .CodeMirror-merge-l-chunk {
+  background-color: rgba(189, 177, 95, 0.3) !important; /* Semi-transparent red instead of #eef */
+}
+
+/* Override yellow border colors from merge.css */
+.cm-s-devhelper-night .CodeMirror-merge-r-chunk-start {
+  border-top-color: rgba(189, 177, 95, 0.3) !important; /* Green border instead of yellow #ee8 */
+}
+
+.cm-s-devhelper-night .CodeMirror-merge-r-chunk-end {
+  border-bottom-color: rgba(189, 177, 95, 0.3) !important; /* Green border instead of yellow #ee8 */
+}
+
+.cm-s-devhelper-night .CodeMirror-merge-l-chunk-start {
+  border-top-color: #d64545 !important; /* Red border instead of blue #88e */
+}
+
+.cm-s-devhelper-night .CodeMirror-merge-l-chunk-end {
+  border-bottom-color: #d64545 !important; /* Red border instead of blue #88e */
+}
+
+/* Override connection line colors */
+.cm-s-devhelper-night .CodeMirror-merge-r-connect {
+  stroke: #4a9960 !important; /* Green stroke instead of yellow */
+  fill: rgba(34, 139, 34, 0.1) !important; /* Green fill instead of yellow background */
+}
+
+.cm-s-devhelper-night .CodeMirror-merge-l-connect {
+  stroke: #d64545 !important; /* Red stroke instead of blue */
+  fill: rgba(220, 20, 60, 0.1) !important; /* Red fill instead of blue background */
+}

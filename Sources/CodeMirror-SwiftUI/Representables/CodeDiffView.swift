@@ -113,6 +113,7 @@ extension CodeDiffView {
         
         let userController = WKUserContentController()
         userController.add(context.coordinator, name: CodeDiffViewRPC.isReady)
+        userController.add(context.coordinator, name: CodeDiffViewRPC.textContentDidChange)
         
         let configuration = WKWebViewConfiguration()
         configuration.preferences = preferences

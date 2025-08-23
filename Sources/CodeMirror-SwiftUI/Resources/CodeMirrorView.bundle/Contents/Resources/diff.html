@@ -273,19 +273,11 @@
   <script src="modes/yacas/yacas.js"></script>
   <script src="modes/yaml/yaml.js"></script>
   <script src="modes/yaml-frontmatter/yaml-frontmatter.js"></script>
-  <script src="modes/z80/z80.js"></script>
-  <script src="modes/diff/diff.js"></script>
 
 </head>
 <style>
   html,
-  body {
-    margin: 0px;
-    padding: 0px;
-    width: 100%;
-    height: 100%;
-  }
-
+  body,
   #diffContainer {
     margin: 0px;
     padding: 0px;
@@ -303,6 +295,7 @@
     height: 100% !important;
     width: 100% !important;
     position: relative;
+    border: none !important;
   }
 
   .CodeMirror-merge .CodeMirror-merge-pane {
@@ -317,18 +310,6 @@
   .CodeMirror-merge-gap {
     border: none;
     background: transparent;
-    width: 20px !important;
-    min-width: 20px;
-  }
-
-  .CodeMirror-merge-scrolllock {
-    position: absolute;
-    right: 3px;
-    top: 3px;
-    width: 14px;
-    height: 14px;
-    background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAAdgAAAHYBTnsmCAAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAAFYSURBVCiRpZM9SwNBEIafgwQSCxsLwcJCG1sLG0uxsLGwsLGwsLWwsLGwsLWwsLGwsLWwsLGwsLWwsLWwsLGwsLWwsLGwsLWwsLGwsLWwsLGwsLWwsLWwsLWwsLGwsLWwsLGwsLWwsLGwsLWwsLGwsLWwsLGwsLWwsLGwsLWwsLGwsLWwsLGwsLWwsLGwsLWwsLGwsLWwsLGwsLGwsLWwsA==") 0 0;
-    cursor: pointer;
   }
 </style>
 
@@ -336,6 +317,9 @@
   <div id="diffContainer"></div>
 
   <script>
+    
+    CodeMirror.keyMap["default"]["Cmd-/"] = "toggleComment";  // Add-on
+    
     var mergeView = null;
     var currentTheme = "devhelper-night";
     var currentMode = "text/plain";
@@ -367,13 +351,28 @@
           connect: "align",
           collapseIdentical: false,
           allowEditingOriginals: true,
-          revertButtons: false,
+          revertButtons: true,
           styleActiveLine: true
         });
 
-// Notify Swift that diff view is ready
-if (window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.codeMirrorDiffIsReady) {
+        // Add change event handlers similar to index.html
+        if (mergeView.editor) {
+          mergeView.editor().on("change", function (instance, change) {
+            var content = GetContent();
+            if (window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.codeMirrorTextContentDidChange) {
+              window.webkit.messageHandlers.codeMirrorTextContentDidChange.postMessage(content);
+            }
+          });
+        }
+
+        // Notify Swift that diff view is ready
+        if (window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.codeMirrorDiffIsReady) {
           window.webkit.messageHandlers.codeMirrorDiffIsReady.postMessage(null);
+        }
+        
+        // Also notify with the standard ready handler for consistency
+        if (window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.codeMirrorIsReady) {
+          window.webkit.messageHandlers.codeMirrorIsReady.postMessage(null);
         }
       } catch (error) {
         console.error("Error creating merge view:", error);
@@ -479,6 +478,220 @@ if (window.webkit && window.webkit.messageHandlers && window.webkit.messageHandl
 
     function RefreshDiffView() {
       initializeDiffView();
+    }
+
+    // Add missing API functions from index.html to maintain consistency
+
+    function customFoldMarker(from, to) {
+      var count = undefined;
+
+      // Get open / close token
+      var startToken = '{', endToken = '}';
+      var prevLine = mergeView && mergeView.editor ? mergeView.editor().getLine(from.line) : '';
+      if (prevLine.lastIndexOf('[') > prevLine.lastIndexOf('{')) {
+        startToken = '[', endToken = ']';
+      }
+
+      // Get json content
+      var internal = mergeView && mergeView.editor ? mergeView.editor().getRange(from, to) : '';
+      var toParse = startToken + internal + endToken;
+
+      // Get key count
+      try {
+        var parsed = JSON.parse(toParse);
+        count = Object.keys(parsed).length;
+      } catch (e) { }
+
+      return count ? `\u21A4 ${count} \u21A6` : '\u2194';
+    }
+
+    function getStringFromHex(content) {
+      return decodeURIComponent(content.replace(/\s+/g, '').replace(/[0-9a-f]{2}/g, '%$&'));
+    }
+
+    function SupportedMimeTypes() {
+      return Object.keys(CodeMirror.mimeModes).join(",");
+    }
+
+    function SetMimeType(type) {
+      SetDiffMimeType(type);
+    }
+
+    function GetMimeType() {
+      return currentMode;
+    }
+
+    function SetLineWrapping(wrapping) {
+      if (mergeView) {
+        if (mergeView.editor) {
+          mergeView.editor().setOption("lineWrapping", wrapping);
+        }
+        if (mergeView.leftOriginal) {
+          mergeView.leftOriginal().setOption("lineWrapping", wrapping);
+        }
+        if (mergeView.rightOriginal) {
+          mergeView.rightOriginal().setOption("lineWrapping", wrapping);
+        }
+      }
+    }
+
+    function GetLineWrapping() {
+      if (mergeView && mergeView.editor) {
+        return mergeView.editor().getOption("lineWrapping");
+      }
+      return false;
+    }
+
+    function SetReadOnly(readOnly) {
+      SetAllowEdit(!readOnly);
+    }
+
+    function GetReadOnly() {
+      if (mergeView && mergeView.editor) {
+        return mergeView.editor().getOption("readOnly");
+      }
+      return false;
+    }
+
+    function SetIndentUnit(unit) {
+      if (mergeView) {
+        if (mergeView.editor) {
+          mergeView.editor().setOption("indentUnit", unit);
+        }
+        if (mergeView.leftOriginal) {
+          mergeView.leftOriginal().setOption("indentUnit", unit);
+        }
+        if (mergeView.rightOriginal) {
+          mergeView.rightOriginal().setOption("indentUnit", unit);
+        }
+      }
+    }
+
+    function GetIndentUnit() {
+      if (mergeView && mergeView.editor) {
+        return mergeView.editor().getOption("indentUnit");
+      }
+      return 2;
+    }
+
+    function SetTheme(text) {
+      SetDiffTheme(text);
+    }
+
+    function ToggleInvisible(toggle) {
+      if (mergeView) {
+        if (mergeView.editor) {
+          mergeView.editor().setOption("showInvisibles", toggle);
+          mergeView.editor().refresh();
+        }
+        if (mergeView.leftOriginal) {
+          mergeView.leftOriginal().setOption("showInvisibles", toggle);
+          mergeView.leftOriginal().refresh();
+        }
+        if (mergeView.rightOriginal) {
+          mergeView.rightOriginal().setOption("showInvisibles", toggle);
+          mergeView.rightOriginal().refresh();
+        }
+      }
+    }
+
+    function SetTabSize(size) {
+      if (mergeView) {
+        if (mergeView.editor) {
+          mergeView.editor().setOption("tabSize", size);
+        }
+        if (mergeView.leftOriginal) {
+          mergeView.leftOriginal().setOption("tabSize", size);
+        }
+        if (mergeView.rightOriginal) {
+          mergeView.rightOriginal().setOption("tabSize", size);
+        }
+      }
+    }
+
+    function GetTabSize() {
+      if (mergeView && mergeView.editor) {
+        return mergeView.editor().getOption("tabSize");
+      }
+      return 2;
+    }
+
+    function SetTabInsertSpaces(flag) {
+      // See http://codemirror.net/doc/manual.html#keymaps
+      if (flag) {
+        CodeMirror.keyMap["basic"]["Tab"] = function (cm) {
+          var spaces = Array(cm.getOption("indentUnit") + 1).join(" ");
+          cm.replaceSelection(spaces, "end", "+input");
+        };
+      } else {
+        CodeMirror.keyMap["basic"]["Tab"] = "defaultTab";
+      }
+    }
+
+    function GetTabInsertSpaces() {
+      return CodeMirror.keyMap["basic"]["Tab"] == "defaultTab";
+    }
+
+    function SetContent(content) {
+      var text = getStringFromHex(content);
+      SetModifiedCode(text);
+    }
+
+    function GetContent() {
+      if (mergeView && mergeView.editor) {
+        return mergeView.editor().getValue();
+      }
+      return modifiedCode;
+    }
+
+    function ClearHistory() {
+      if (mergeView) {
+        if (mergeView.editor) {
+          mergeView.editor().doc.clearHistory();
+          mergeView.editor().doc.markClean();
+        }
+        if (mergeView.leftOriginal) {
+          mergeView.leftOriginal().doc.clearHistory();
+          mergeView.leftOriginal().doc.markClean();
+        }
+        if (mergeView.rightOriginal) {
+          mergeView.rightOriginal().doc.clearHistory();
+          mergeView.rightOriginal().doc.markClean();
+        }
+      }
+    }
+
+    function IsClean() {
+      if (mergeView && mergeView.editor) {
+        return mergeView.editor().doc.isClean();
+      }
+      return true;
+    }
+
+    function GetTextSelection() {
+      if (mergeView && mergeView.editor) {
+        return mergeView.editor().getSelection();
+      }
+      return "";
+    }
+
+    function SetFontSize(size) {
+      SetDiffFontSize(size);
+    }
+
+    // Validate JSON
+    function ValidateJSON() {
+      try {
+          const currentValue = GetContent();
+          if (!currentValue.trim()) { 
+              return "";
+          }
+          
+          JSON.parse(currentValue);
+          return "";
+      } catch (error) {
+          return error.message;
+      }
     }
 
     // Initialize on load

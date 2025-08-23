@@ -9,4 +9,5 @@ import Foundation
 
 struct CodeDiffViewRPC {
     static let isReady = "codeMirrorDiffIsReady"
+    static let textContentDidChange = "codeMirrorTextContentDidChange"
 }

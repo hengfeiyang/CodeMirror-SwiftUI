@@ -317,14 +317,9 @@
   <div id="diffContainer"></div>
 
   <script>
-    
-    CodeMirror.keyMap["default"]["Cmd-/"] = "toggleComment";  // Add-on
-    
     var mergeView = null;
+    var currentMode = "text/html";
     var currentTheme = "devhelper-night";
-    var currentMode = "text/plain";
-    var originalCode = "";
-    var modifiedCode = "";
 
     function initializeDiffView() {
       if (!window.CodeMirror || !window.CodeMirror.MergeView) {
@@ -333,7 +328,7 @@
       }
 
       var container = document.getElementById("diffContainer");
-      
+
       // Clear any existing merge view
       if (mergeView) {
         container.innerHTML = "";
@@ -341,9 +336,8 @@
 
       try {
         mergeView = CodeMirror.MergeView(container, {
-          value: modifiedCode,
-          origLeft: null,
-          orig: originalCode,
+          value: "",
+          orig: "",
           lineNumbers: true,
           mode: currentMode,
           theme: currentTheme,
@@ -358,7 +352,7 @@
         // Add change event handlers similar to index.html
         if (mergeView.editor) {
           mergeView.editor().on("change", function (instance, change) {
-            var content = GetContent();
+            var content = GetLeftContent();
             if (window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.codeMirrorTextContentDidChange) {
               window.webkit.messageHandlers.codeMirrorTextContentDidChange.postMessage(content);
             }
@@ -369,7 +363,7 @@
         if (window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.codeMirrorDiffIsReady) {
           window.webkit.messageHandlers.codeMirrorDiffIsReady.postMessage(null);
         }
-        
+
         // Also notify with the standard ready handler for consistency
         if (window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.codeMirrorIsReady) {
           window.webkit.messageHandlers.codeMirrorIsReady.postMessage(null);
@@ -379,70 +373,7 @@
       }
     }
 
-    function SetDiffTheme(theme) {
-      currentTheme = theme;
-      if (mergeView) {
-        // Set theme for the modified code editor (right side)
-        if (mergeView.editor) {
-          mergeView.editor().setOption("theme", theme);
-        }
-        // Set theme for the original code editor (left side)
-        if (mergeView.leftOriginal) {
-          mergeView.leftOriginal().setOption("theme", theme);
-        }
-        // In 2-way merge, rightOriginal is the original (left side)
-        if (mergeView.rightOriginal) {
-          mergeView.rightOriginal().setOption("theme", theme);
-        }
-        // Also try setting theme directly on merge view
-        mergeView.setOption && mergeView.setOption("theme", theme);
-      }
-    }
-
-    function SetDiffMimeType(mimeType) {
-      currentMode = mimeType;
-      if (mergeView) {
-        if (mergeView.editor) {
-          mergeView.editor().setOption("mode", mimeType);
-        }
-        if (mergeView.leftOriginal) {
-          mergeView.leftOriginal().setOption("mode", mimeType);
-        }
-        if (mergeView.rightOriginal) {
-          mergeView.rightOriginal().setOption("mode", mimeType);
-        }
-      }
-    }
-
-    function SetOriginalCode(code) {
-      originalCode = code;
-      RefreshDiffView();
-    }
-
-    function SetModifiedCode(code) {
-      modifiedCode = code;
-      RefreshDiffView();
-    }
-
-    function SetDiffFontSize(size) {
-      var style = document.createElement("style");
-      style.textContent = ".CodeMirror { font-size: " + size + "px; }";
-      document.head.appendChild(style);
-      
-      if (mergeView) {
-        if (mergeView.editor) {
-          mergeView.editor().refresh();
-        }
-        if (mergeView.leftOriginal) {
-          mergeView.leftOriginal().refresh();
-        }
-        if (mergeView.rightOriginal) {
-          mergeView.rightOriginal().refresh();
-        }
-      }
-    }
-
-    function SetDiffLineNumbers(show) {
+    function SetLineNumbers(show) {
       if (mergeView) {
         if (mergeView.editor) {
           mergeView.editor().setOption("lineNumbers", show);
@@ -462,48 +393,7 @@
       }
     }
 
-    function SetAllowEdit(allowEdit) {
-      if (mergeView) {
-        if (mergeView.editor) {
-          mergeView.editor().setOption("readOnly", !allowEdit);
-        }
-        if (mergeView.leftOriginal) {
-          mergeView.leftOriginal().setOption("readOnly", !allowEdit); // Allow editing based on allowEdit parameter
-        }
-        if (mergeView.rightOriginal) {
-          mergeView.rightOriginal().setOption("readOnly", !allowEdit); // Allow editing based on allowEdit parameter
-        }
-      }
-    }
-
-    function RefreshDiffView() {
-      initializeDiffView();
-    }
-
     // Add missing API functions from index.html to maintain consistency
-
-    function customFoldMarker(from, to) {
-      var count = undefined;
-
-      // Get open / close token
-      var startToken = '{', endToken = '}';
-      var prevLine = mergeView && mergeView.editor ? mergeView.editor().getLine(from.line) : '';
-      if (prevLine.lastIndexOf('[') > prevLine.lastIndexOf('{')) {
-        startToken = '[', endToken = ']';
-      }
-
-      // Get json content
-      var internal = mergeView && mergeView.editor ? mergeView.editor().getRange(from, to) : '';
-      var toParse = startToken + internal + endToken;
-
-      // Get key count
-      try {
-        var parsed = JSON.parse(toParse);
-        count = Object.keys(parsed).length;
-      } catch (e) { }
-
-      return count ? `\u21A4 ${count} \u21A6` : '\u2194';
-    }
 
     function getStringFromHex(content) {
       return decodeURIComponent(content.replace(/\s+/g, '').replace(/[0-9a-f]{2}/g, '%$&'));
@@ -514,7 +404,18 @@
     }
 
     function SetMimeType(type) {
-      SetDiffMimeType(type);
+      currentMode = type;
+      if (mergeView) {
+        if (mergeView.editor) {
+          mergeView.editor().setOption("mode", type);
+        }
+        if (mergeView.leftOriginal) {
+          mergeView.leftOriginal().setOption("mode", type);
+        }
+        if (mergeView.rightOriginal) {
+          mergeView.rightOriginal().setOption("mode", type);
+        }
+      }
     }
 
     function GetMimeType() {
@@ -543,7 +444,17 @@
     }
 
     function SetReadOnly(readOnly) {
-      SetAllowEdit(!readOnly);
+      if (mergeView) {
+        if (mergeView.editor) {
+          mergeView.editor().setOption("readOnly", readOnly);
+        }
+        if (mergeView.leftOriginal) {
+          mergeView.leftOriginal().setOption("readOnly", readOnly);
+        }
+        if (mergeView.rightOriginal) {
+          mergeView.rightOriginal().setOption("readOnly", readOnly);
+        }
+      }
     }
 
     function GetReadOnly() {
@@ -574,8 +485,24 @@
       return 2;
     }
 
-    function SetTheme(text) {
-      SetDiffTheme(text);
+    function SetTheme(theme) {
+      currentTheme = theme;
+      if (mergeView) {
+        // Set theme for the modified code editor (right side)
+        if (mergeView.editor) {
+          mergeView.editor().setOption("theme", theme);
+        }
+        // Set theme for the original code editor (left side)
+        if (mergeView.leftOriginal) {
+          mergeView.leftOriginal().setOption("theme", theme);
+        }
+        // In 2-way merge, rightOriginal is the original (left side)
+        if (mergeView.rightOriginal) {
+          mergeView.rightOriginal().setOption("theme", theme);
+        }
+        // Also try setting theme directly on merge view
+        mergeView.setOption && mergeView.setOption("theme", theme);
+      }
     }
 
     function ToggleInvisible(toggle) {
@@ -632,16 +559,28 @@
       return CodeMirror.keyMap["basic"]["Tab"] == "defaultTab";
     }
 
-    function SetContent(content) {
+    function SetLeftContent(code) {
+      console.log("SetLeftContent called with:", code.substring(0, 100) + "...");
       var text = getStringFromHex(content);
-      SetModifiedCode(text);
+      mergeView.editor().setValue(text);
+      mergeView.editor().clearHistory();
+      mergeView.editor().markClean();
     }
 
-    function GetContent() {
-      if (mergeView && mergeView.editor) {
-        return mergeView.editor().getValue();
-      }
-      return modifiedCode;
+    function SetRightContent(content) {
+      console.log("SetRightContent called with:", code.substring(0, 100) + "...");
+      var text = getStringFromHex(content);
+      editor.rightOriginal().setValue(text);
+      editor.rightOriginal().clearHistory();
+      editor.rightOriginal().markClean();
+    }
+
+    function GetLeftContent() {
+      return mergeView.editor().getValue();
+    }
+
+    function GetRightContent() {
+      return mergeView.rightOriginal().getValue();
     }
 
     function ClearHistory() {
@@ -676,81 +615,46 @@
     }
 
     function SetFontSize(size) {
-      SetDiffFontSize(size);
+      // Apply font size directly to the editor wrapper elements to preserve content
+      if (mergeView) {
+        if (mergeView.editor) {
+          mergeView.editor().getWrapperElement().style["font-size"] = size + "px";
+          mergeView.editor().refresh();
+        }
+        if (mergeView.leftOriginal) {
+          mergeView.leftOriginal().getWrapperElement().style["font-size"] = size + "px";
+          mergeView.leftOriginal().refresh();
+        }
+        if (mergeView.rightOriginal) {
+          mergeView.rightOriginal().getWrapperElement().style["font-size"] = size + "px";
+          mergeView.rightOriginal().refresh();
+        }
+      }
     }
 
     // MARK: - Copy functionality for diff view
-    
-    function GetOriginalContent() {
-      if (mergeView && mergeView.rightOriginal) {
-        return mergeView.rightOriginal().getValue();
-      } else if (mergeView && mergeView.leftOriginal) {
-        return mergeView.leftOriginal().getValue();
-      }
-      return originalCode;
+
+    function IsMergeViewReady() {
+      return mergeView !== null && mergeView !== undefined;
     }
-    
-    function GetModifiedContent() {
-      if (mergeView && mergeView.editor) {
-        return mergeView.editor().getValue();
+
+    function GetMergeViewStatus() {
+      if (!mergeView) {
+        return "Merge view not initialized";
       }
-      return modifiedCode;
-    }
-    
-    function CopyOriginalToClipboard() {
-      const content = GetOriginalContent();
-      
-      if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(content).then(() => {
-          console.log("Original content copied to clipboard");
-        }).catch(err => {
-          console.error("Failed to copy original content: ", err);
-        });
-      } else {
-        // Fallback for older browsers
-        const textArea = document.createElement("textarea");
-        textArea.value = content;
-        document.body.appendChild(textArea);
-        textArea.focus();
-        textArea.select();
-        try {
-          document.execCommand('copy');
-          console.log("Original content copied to clipboard (fallback)");
-        } catch (err) {
-          console.error("Failed to copy original content (fallback): ", err);
-        }
-        document.body.removeChild(textArea);
-      }
-    }
-    
-    function CopyModifiedToClipboard() {
-      const content = GetModifiedContent();
-      
-      if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(content).then(() => {
-          console.log("Modified content copied to clipboard");
-        }).catch(err => {
-          console.error("Failed to copy modified content: ", err);
-        });
-      } else {
-        // Fallback for older browsers
-        const textArea = document.createElement("textarea");
-        textArea.value = content;
-        document.body.appendChild(textArea);
-        textArea.focus();
-        textArea.select();
-        try {
-          document.execCommand('copy');
-          console.log("Modified content copied to clipboard (fallback)");
-        } catch (err) {
-          console.error("Failed to copy modified content (fallback): ", err);
-        }
-        document.body.removeChild(textArea);
-      }
+      return {
+        hasEditor: !!mergeView.editor,
+        hasOrig: !!mergeView.orig,
+        hasLeftOriginal: !!mergeView.leftOriginal,
+        hasRightOriginal: !!mergeView.rightOriginal,
+        editorValue: mergeView.editor ? mergeView.editor().getValue().length : 0,
+        origValue: mergeView.orig ? mergeView.orig.getValue().length : 0
+      };
     }
 
     // Initialize on load
-    window.addEventListener("load", function() {
+    window.addEventListener("load", function () {
+      console.log("Window loaded, initializing diff view...");
       initializeDiffView();
     });
   </script>

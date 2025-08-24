@@ -19,36 +19,36 @@ typealias DiffRepresentableView = UIViewRepresentable
 
 public struct CodeDiffView: DiffRepresentableView {
     
-    var originalCode: String
-    var modifiedCode: String
+    var leftCode: String
+    var rightCode: String
     var theme: CodeViewTheme
     var mode: Mode
     var fontSize: Int
     var showLineNumbers: Bool
     var collapseIdentical: Bool
-    var allowEdit: Bool
+    var readOnly: Bool
     
     var onLoadSuccess: (() -> ())?
     var onLoadFail: ((Error) -> ())?
     var onCoordinatorReady: ((CodeDiffViewController) -> ())?
     
-    public init(originalCode: String,
-                modifiedCode: String,
-                theme: CodeViewTheme = CodeViewTheme.materialPalenight,
+    public init(leftCode: String,
+                rightCode: String,
                 mode: Mode = CodeMode.swift.mode(),
+                theme: CodeViewTheme = CodeViewTheme.materialPalenight,
                 fontSize: Int = 12,
                 showLineNumbers: Bool = true,
                 collapseIdentical: Bool = false,
-                allowEdit: Bool = false
+                readOnly: Bool = false
     ) {
-        self.originalCode = originalCode
-        self.modifiedCode = modifiedCode
-        self.theme = theme
+        self.leftCode = leftCode
+        self.rightCode = rightCode
         self.mode = mode
+        self.theme = theme
         self.fontSize = fontSize
         self.showLineNumbers = showLineNumbers
         self.collapseIdentical = collapseIdentical
-        self.allowEdit = allowEdit
+        self.readOnly = readOnly
     }
     
     // MARK: - Life Cycle
@@ -140,12 +140,12 @@ extension CodeDiffView {
         context.coordinator.setWebView(webView)
         context.coordinator.setThemeName(theme.rawValue)
         context.coordinator.setMimeType(mode.mimeType)
-        context.coordinator.setOriginalCode(originalCode)
-        context.coordinator.setModifiedCode(modifiedCode)
+        context.coordinator.setLeftContent(leftCode)
+        context.coordinator.setRightContent(rightCode)
         context.coordinator.setFontSize(fontSize)
         context.coordinator.setShowLineNumbers(showLineNumbers)
         context.coordinator.setCollapseIdentical(collapseIdentical)
-        context.coordinator.setAllowEdit(allowEdit)
+        context.coordinator.setReadOnly(readOnly)
         
         return webView
     }
@@ -153,11 +153,9 @@ extension CodeDiffView {
     private func updateWebView(_ context: CodeDiffView.Context) {
         context.coordinator.setThemeName(theme.rawValue)
         context.coordinator.setMimeType(mode.mimeType)
-        context.coordinator.setOriginalCode(originalCode)
-        context.coordinator.setModifiedCode(modifiedCode)
         context.coordinator.setFontSize(fontSize)
         context.coordinator.setShowLineNumbers(showLineNumbers)
         context.coordinator.setCollapseIdentical(collapseIdentical)
-        context.coordinator.setAllowEdit(allowEdit)
+        context.coordinator.setReadOnly(readOnly)
     }
 }

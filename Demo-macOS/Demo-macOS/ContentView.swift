@@ -28,7 +28,7 @@ struct ContentView: View {
   }
   
   // Sample code for diff demonstration
-  private let originalCode = """
+  private let leftCode = """
 function calculateTotal(items) {
   let total = 0;
   for (let item of items) {
@@ -46,7 +46,7 @@ const products = [
 console.log("Total:", calculateTotal(products));
 """
   
-  private let modifiedCode = """
+  private let rightCode = """
 function calculateTotal(items) {
   let total = 0;
   let tax = 0;
@@ -69,31 +69,52 @@ console.log("Total:", result.total);
 console.log("Tax:", result.tax);
 console.log("Grand Total:", result.grandTotal);
 """
-  
-  // Copy to clipboard function
-  private func copyToClipboard() {
-    let pasteboard = NSPasteboard.general
-    pasteboard.clearContents()
-    pasteboard.setString(codeBlock, forType: .string)
+
+  // Copy original content (left side) to clipboard
+  private func copyLeftToClipboard() {
+    print("Copy Left button clicked")
+    print("Current diffCoordinator state: \(diffCoordinator != nil ? "available" : "nil")")
+    print("Current tab selection: \(selectedTheme)")
     
-    // Provide visual feedback
-    copyButtonText = "Copied!"
-    print("Code copied to clipboard!")
-    
-    // Reset button text after delay
-    DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
-      copyButtonText = "Copy"
-    }
-  }
-  
-  // Copy diff content to clipboard function
-  private func copyDiffToClipboard() {
     guard let coordinator = diffCoordinator else {
       print("Diff coordinator not available")
       return
     }
     
-    coordinator.getContent { content in
+    print("Coordinator found, calling getLeftContent...")
+    coordinator.getLeftContent { content in
+      print("Left content received, length: \(content.count)")
+      let pasteboard = NSPasteboard.general
+      pasteboard.clearContents()
+      pasteboard.setString(content, forType: .string)
+      
+      // Provide visual feedback
+      DispatchQueue.main.async {
+        copyLeftButtonText = "Copied!"
+        print("Left content copied to clipboard!")
+        
+        // Reset button text after delay
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+          copyLeftButtonText = "Copy Left"
+        }
+      }
+    }
+  }
+  
+  // Copy modified content (right side) to clipboard
+  private func copyRightToClipboard() {
+    print("Copy Right button clicked")
+    print("Current diffCoordinator state: \(diffCoordinator != nil ? "available" : "nil")")
+    print("Current tab selection: \(selectedTheme)")
+    
+    guard let coordinator = diffCoordinator else {
+      print("Diff coordinator not available")
+      return
+    }
+    
+    print("Coordinator found, calling getRightContent...")
+    coordinator.getRightContent { content in
+      print("Right content received, length: \(content.count)")
       let pasteboard = NSPasteboard.general
       pasteboard.clearContents()
       pasteboard.setString(content, forType: .string)
@@ -101,7 +122,7 @@ console.log("Grand Total:", result.grandTotal);
       // Provide visual feedback
       DispatchQueue.main.async {
         copyRightButtonText = "Copied!"
-        print("Modified content copied to clipboard!")
+        print("Right content copied to clipboard!")
         
         // Reset button text after delay
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
@@ -117,8 +138,8 @@ console.log("Grand Total:", result.grandTotal);
       VStack {
         HStack {
           Picker(selection: $selectedTheme, label: EmptyView()) {
-            ForEach(0 ..< themes.count) {
-              Text(self.themes[$0].rawValue)
+            ForEach(themes.indices, id: \.self) { index in
+              Text(self.themes[index].rawValue)
             }
           }
           .frame(minWidth: 100, idealWidth: 150, maxWidth: 150)
@@ -126,9 +147,7 @@ console.log("Grand Total:", result.grandTotal);
           Spacer()
           
           Button(action: { lineWrapping.toggle() }) { Text("Wrap") }
-          
-          Button(action: copyToClipboard) { Text(copyButtonText) }
-          
+                    
           Toggle(isOn: $showInvisibleCharacters) {
             Text("Show invisible chars.")
           }
@@ -155,9 +174,10 @@ console.log("Grand Total:", result.grandTotal);
         
         GeometryReader { reader in
           ScrollView {
-            CodeView(theme: themes[selectedTheme],
+            CodeView(
                      code: $codeBlock,
                      mode: codeMode,
+                     theme: themes[selectedTheme],
                      fontSize: fontSize,
                      showInvisibleCharacters: showInvisibleCharacters,
                      lineWrapping: lineWrapping)
@@ -184,19 +204,19 @@ console.log("Grand Total:", result.grandTotal);
       VStack {
         HStack {
           Picker(selection: $selectedTheme, label: EmptyView()) {
-            ForEach(0 ..< themes.count) {
-              Text(self.themes[$0].rawValue)
+            ForEach(themes.indices, id: \.self) { index in
+              Text(self.themes[index].rawValue)
             }
           }
           .frame(minWidth: 100, idealWidth: 150, maxWidth: 150)
           
           Spacer()
           
-          Button(action: copyDiffToClipboard) { 
+          Button(action: copyLeftToClipboard) { 
             Text(copyLeftButtonText)
           }
           
-          Button(action: copyDiffToClipboard) { 
+          Button(action: copyRightToClipboard) { 
             Text(copyRightButtonText)
           }
             
@@ -221,14 +241,14 @@ console.log("Grand Total:", result.grandTotal);
         .padding()
         
         CodeDiffView(
-          originalCode: originalCode,
-          modifiedCode: modifiedCode,
-          theme: themes[selectedTheme],
+          leftCode: leftCode,
+          rightCode: rightCode,
           mode: CodeMode.javascript.mode(),
+          theme: themes[selectedTheme],
           fontSize: fontSize,
           showLineNumbers: true,
           collapseIdentical: false,
-          allowEdit: true
+          readOnly: false
         )
         .onLoadSuccess {
           print("CodeDiffView Loaded")
@@ -238,23 +258,36 @@ console.log("Grand Total:", result.grandTotal);
         }
         .onCoordinatorReady { coordinator in
           // Store the coordinator for copy functionality
-          self.diffCoordinator = coordinator
+          print("onCoordinatorReady called, setting diffCoordinator...")
           
+          // Use the helper function to set the coordinator
+          DispatchQueue.main.async {
+            self.diffCoordinator = coordinator
+            print("diffCoordinator set successfully")
+          }
+
           // Demonstrate the new consistent API functions
           print("CodeDiffView Coordinator Ready")
           
           // Test some of the new API functions after a short delay
-          DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+          DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+            print("Testing coordinator functions after 2 second delay...")
+            
             coordinator.getSupportedMimeTypes { mimeTypes in
               print("Supported MIME types: \(mimeTypes)")
             }
             
-            coordinator.getContent { content in
-              print("Current content length: \(content.count) characters")
-            }
-            
             coordinator.isClean { clean in
               print("Content is clean: \(clean)")
+            }
+            
+            // Test the copy functions
+            coordinator.getLeftContent { content in
+              print("Test getLeftContent: \(content.prefix(50))...")
+            }
+            
+            coordinator.getRightContent { content in
+              print("Test getRightContent: \(content.prefix(50))...")
             }
           }
         }

@@ -38,9 +38,9 @@ public struct CodeView: RepresentableView {
   var onCoordinatorReady: ((CodeViewController) -> ())?
   
   
-  public init(theme: CodeViewTheme = CodeViewTheme.materialPalenight,
-              code: Binding<String>,
+  public init(code: Binding<String>,
               mode: Mode,
+              theme: CodeViewTheme = CodeViewTheme.materialPalenight,
               fontSize: Int = 12,
               showInvisibleCharacters: Bool = true,
               lineWrapping: Bool = true,

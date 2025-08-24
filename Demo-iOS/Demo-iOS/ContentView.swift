@@ -24,8 +24,8 @@ struct ContentView: View {
     VStack {
       HStack {
         Picker(selection: $selectedTheme, label: Text("CodeView Theme")) {
-          ForEach(0 ..< themes.count) {
-            Text(self.themes[$0].rawValue)
+          ForEach(themes.indices, id: \.self) { index in
+            Text(self.themes[index].rawValue)
           }
         }
         .pickerStyle(MenuPickerStyle())

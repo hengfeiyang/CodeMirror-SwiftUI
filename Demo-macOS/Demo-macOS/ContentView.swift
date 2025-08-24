@@ -28,7 +28,7 @@ struct ContentView: View {
   }
   
   // Sample code for diff demonstration
-  @State private var leftCode = """
+  @State private var leftContent = """
 function calculateTotal(items) {
   let total = 0;
   for (let item of items) {
@@ -46,7 +46,7 @@ const products = [
 console.log("Total:", calculateTotal(products));
 """
   
-  @State private var rightCode = """
+  @State private var rightContent = """
 function calculateTotal(items) {
   let total = 0;
   let tax = 0;
@@ -184,7 +184,7 @@ console.log("Grand Total:", result.grandTotal);
               .onLoadSuccess {
                 print("CodeView Loaded")
               }
-              .onContentChange { newCode in
+              .onContentChange { _ in
                 print("CodeView Content Changed")
               }
               .onLoadFail { error in
@@ -248,8 +248,8 @@ console.log("Grand Total:", result.grandTotal);
         .padding()
         
         CodeDiffView(
-          leftCode: $leftCode,
-          rightCode: $rightCode,
+          leftContent: $leftContent,
+          rightContent: $rightContent,
           mode: CodeMode.javascript.mode(),
           theme: themes[selectedTheme],
           fontSize: fontSize,
@@ -260,17 +260,20 @@ console.log("Grand Total:", result.grandTotal);
         .onLoadSuccess {
           print("CodeDiffView Loaded")
         }
+        .onContentChange { _ in
+          print("CodeDiffView Content Changed")
+        }
         .onLoadFail { error in
           print("CodeDiffView Load failed : \(error.localizedDescription)")
         }
         .onCoordinatorReady { coordinator in
           // Store the coordinator for copy functionality
-          print("onCoordinatorReady called, setting diffCoordinator...")
+          print("CodeDiffView onCoordinatorReady called, setting diffCoordinator...")
           
           // Use the helper function to set the coordinator
           DispatchQueue.main.async {
             self.diffCoordinator = coordinator
-            print("diffCoordinator set successfully")
+            print("CodeDiffView diffCoordinator set successfully")
           }
 
           // Demonstrate the new consistent API functions
@@ -278,19 +281,19 @@ console.log("Grand Total:", result.grandTotal);
           
           // Test some of the new API functions after a short delay
           DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
-            print("Testing coordinator functions after 2 second delay...")
+            print("CodeDiffView Testing coordinator functions after 2 second delay...")
             
             coordinator.isClean { clean in
-              print("Content is clean: \(clean)")
+              print("CodeDiffView Content is clean: \(clean)")
             }
             
             // Test the copy functions
             coordinator.getLeftContent { content in
-              print("Test getLeftContent: \(content.prefix(50))...")
+              print("CodeDiffView Test getLeftContent: \(content.prefix(50))...")
             }
             
             coordinator.getRightContent { content in
-              print("Test getRightContent: \(content.prefix(50))...")
+              print("CodeDiffView Test getRightContent: \(content.prefix(50))...")
             }
           }
         }

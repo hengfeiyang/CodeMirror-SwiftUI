@@ -19,8 +19,8 @@ typealias DiffRepresentableView = UIViewRepresentable
 
 public struct CodeDiffView: DiffRepresentableView {
     
-    @Binding var leftCode: String
-    @Binding var rightCode: String
+    @Binding var leftContent: String
+    @Binding var rightContent: String
     var theme: CodeViewTheme
     var mode: Mode
     var fontSize: Int
@@ -30,10 +30,11 @@ public struct CodeDiffView: DiffRepresentableView {
     
     var onLoadSuccess: (() -> ())?
     var onLoadFail: ((Error) -> ())?
+    var onContentChange: ((String) -> ())?
     var onCoordinatorReady: ((CodeDiffViewController) -> ())?
     
-    public init(leftCode: Binding<String>,
-                rightCode: Binding<String>,
+    public init(leftContent: Binding<String>,
+                rightContent: Binding<String>,
                 mode: Mode = CodeMode.swift.mode(),
                 theme: CodeViewTheme = CodeViewTheme.materialPalenight,
                 fontSize: Int = 12,
@@ -41,8 +42,8 @@ public struct CodeDiffView: DiffRepresentableView {
                 lineWrapping: Bool = true,
                 readOnly: Bool = false
     ) {
-        self._leftCode = leftCode
-        self._rightCode = rightCode
+        self._leftContent = leftContent
+        self._rightContent = rightContent
         self.mode = mode
         self.theme = theme
         self.fontSize = fontSize      
@@ -93,6 +94,12 @@ extension CodeDiffView {
     public func onLoadFail(_ action: @escaping ((Error) -> ())) -> Self {
         var copy = self
         copy.onLoadFail = action
+        return copy
+    }
+
+    public func onContentChange(_ action: @escaping ((String) -> ())) -> Self {
+        var copy = self
+        copy.onContentChange = action
         return copy
     }
     
@@ -146,8 +153,8 @@ extension CodeDiffView {
         context.coordinator.setReadOnly(readOnly)
 
         // Set content after webView is ready (handled by pending functions)
-        context.coordinator.setLeftContent(leftCode)
-        context.coordinator.setRightContent(rightCode)
+        context.coordinator.setLeftContent(leftContent)
+        context.coordinator.setRightContent(rightContent)
         
         return webView
     }
@@ -155,8 +162,8 @@ extension CodeDiffView {
     fileprivate func updateWebView(_ context: CodeDiffView.Context) {
         updateWhatsNecessary(elementGetter: context.coordinator.getMimeType(_:), elementSetter: context.coordinator.setMimeType(_:), currentElementState: self.mode.mimeType)
         
-        updateWhatsNecessary(elementGetter: context.coordinator.getLeftContent(_:), elementSetter: context.coordinator.setLeftContent(_:), currentElementState: self.leftCode)
-        updateWhatsNecessary(elementGetter: context.coordinator.getRightContent(_:), elementSetter: context.coordinator.setRightContent(_:), currentElementState: self.rightCode)
+        updateWhatsNecessary(elementGetter: context.coordinator.getLeftContent(_:), elementSetter: context.coordinator.setLeftContent(_:), currentElementState: self.leftContent)
+        updateWhatsNecessary(elementGetter: context.coordinator.getRightContent(_:), elementSetter: context.coordinator.setRightContent(_:), currentElementState: self.rightContent)
         
         context.coordinator.setThemeName(self.theme.rawValue)
         context.coordinator.setFontSize(fontSize)

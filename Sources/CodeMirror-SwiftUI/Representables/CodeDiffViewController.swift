@@ -100,12 +100,16 @@ extension CodeDiffViewController: WKScriptMessageHandler {
             print("CodeDiffViewController: isReady")
             break
         case CodeDiffViewRPC.textContentDidChange:
-            let content = (message.body as? String) ?? ""
+            let content = (message.body as? [String: Any]) ?? [:]
             print("CodeDiffViewController: textContentDidChange: \(content)")
-            // if content != parent.code {
-            //     parent.onContentChange?(content)
-            //     parent.code = content
-            // }
+            if let leftContent = content["left"] as? String, leftContent != parent.leftContent {
+                parent.onContentChange?(leftContent)
+                parent.leftContent = leftContent
+            }
+            if let rightContent = content["right"] as? String, rightContent != parent.rightContent {
+                parent.onContentChange?(rightContent)
+                parent.rightContent = rightContent
+            }
             break
         default:
             break

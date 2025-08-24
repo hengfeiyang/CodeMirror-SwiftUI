@@ -352,10 +352,14 @@
         // Add change event handlers similar to index.html
         if (mergeView.editor) {
           mergeView.editor().on("change", function (instance, change) {
-            var content = GetLeftContent();
-            if (window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.codeMirrorTextContentDidChange) {
-              window.webkit.messageHandlers.codeMirrorTextContentDidChange.postMessage(content);
-            }
+            var content = {left: GetLeftContent()};
+            window.webkit.messageHandlers.codeMirrorTextContentDidChange.postMessage(content);
+          });
+        }
+        if (mergeView.rightOriginal) {
+          mergeView.rightOriginal().on("change", function (instance, change) {
+            var content = {right: GetRightContent()};
+            window.webkit.messageHandlers.codeMirrorTextContentDidChange.postMessage(content);
           });
         }
 
@@ -372,7 +376,7 @@
         console.error("Error creating merge view:", error);
       }
     }
-    
+
     // Add missing API functions from index.html to maintain consistency
 
     function getStringFromHex(content) {
@@ -389,9 +393,6 @@
         if (mergeView.editor) {
           mergeView.editor().setOption("mode", type);
         }
-        if (mergeView.leftOriginal) {
-          mergeView.leftOriginal().setOption("mode", type);
-        }
         if (mergeView.rightOriginal) {
           mergeView.rightOriginal().setOption("mode", type);
         }
@@ -406,9 +407,6 @@
       if (mergeView) {
         if (mergeView.editor) {
           mergeView.editor().setOption("lineWrapping", wrapping);
-        }
-        if (mergeView.leftOriginal) {
-          mergeView.leftOriginal().setOption("lineWrapping", wrapping);
         }
         if (mergeView.rightOriginal) {
           mergeView.rightOriginal().setOption("lineWrapping", wrapping);
@@ -428,9 +426,6 @@
         if (mergeView.editor) {
           mergeView.editor().setOption("readOnly", readOnly);
         }
-        if (mergeView.leftOriginal) {
-          mergeView.leftOriginal().setOption("readOnly", readOnly);
-        }
         if (mergeView.rightOriginal) {
           mergeView.rightOriginal().setOption("readOnly", readOnly);
         }
@@ -449,9 +444,6 @@
         if (mergeView.editor) {
           mergeView.editor().setOption("indentUnit", unit);
         }
-        if (mergeView.leftOriginal) {
-          mergeView.leftOriginal().setOption("indentUnit", unit);
-        }
         if (mergeView.rightOriginal) {
           mergeView.rightOriginal().setOption("indentUnit", unit);
         }
@@ -468,15 +460,11 @@
     function SetTheme(theme) {
       currentTheme = theme;
       if (mergeView) {
-        // Set theme for the modified code editor (right side)
+        // Set theme for the modified code editor (left side)
         if (mergeView.editor) {
           mergeView.editor().setOption("theme", theme);
         }
-        // Set theme for the original code editor (left side)
-        if (mergeView.leftOriginal) {
-          mergeView.leftOriginal().setOption("theme", theme);
-        }
-        // In 2-way merge, rightOriginal is the original (left side)
+        // In 2-way merge, rightOriginal is the original (right side)
         if (mergeView.rightOriginal) {
           mergeView.rightOriginal().setOption("theme", theme);
         }
@@ -491,10 +479,6 @@
           mergeView.editor().setOption("showInvisibles", toggle);
           mergeView.editor().refresh();
         }
-        if (mergeView.leftOriginal) {
-          mergeView.leftOriginal().setOption("showInvisibles", toggle);
-          mergeView.leftOriginal().refresh();
-        }
         if (mergeView.rightOriginal) {
           mergeView.rightOriginal().setOption("showInvisibles", toggle);
           mergeView.rightOriginal().refresh();
@@ -506,9 +490,6 @@
       if (mergeView) {
         if (mergeView.editor) {
           mergeView.editor().setOption("tabSize", size);
-        }
-        if (mergeView.leftOriginal) {
-          mergeView.leftOriginal().setOption("tabSize", size);
         }
         if (mergeView.rightOriginal) {
           mergeView.rightOriginal().setOption("tabSize", size);
@@ -539,8 +520,8 @@
       return CodeMirror.keyMap["basic"]["Tab"] == "defaultTab";
     }
 
-    function SetLeftContent(code) {
-      console.log("SetLeftContent called with:", code.substring(0, 100) + "...");
+    function SetLeftContent(content) {
+      console.log("SetLeftContent called with:", content.substring(0, 100) + "...");
       var text = getStringFromHex(content);
       mergeView.editor().setValue(text);
       mergeView.editor().clearHistory();
@@ -548,7 +529,7 @@
     }
 
     function SetRightContent(content) {
-      console.log("SetRightContent called with:", code.substring(0, 100) + "...");
+      console.log("SetRightContent called with:", content.substring(0, 100) + "...");
       var text = getStringFromHex(content);
       mergeView.rightOriginal().setValue(text);
       mergeView.rightOriginal().clearHistory();
@@ -568,10 +549,6 @@
         if (mergeView.editor) {
           mergeView.editor().doc.clearHistory();
           mergeView.editor().doc.markClean();
-        }
-        if (mergeView.leftOriginal) {
-          mergeView.leftOriginal().doc.clearHistory();
-          mergeView.leftOriginal().doc.markClean();
         }
         if (mergeView.rightOriginal) {
           mergeView.rightOriginal().doc.clearHistory();
@@ -598,14 +575,12 @@
       // Apply font size directly to the editor wrapper elements to preserve content
       if (mergeView) {
         if (mergeView.editor) {
+          console.log("Setting font size to left editor: ", size + "px");
           mergeView.editor().getWrapperElement().style["font-size"] = size + "px";
           mergeView.editor().refresh();
         }
-        if (mergeView.leftOriginal) {
-          mergeView.leftOriginal().getWrapperElement().style["font-size"] = size + "px";
-          mergeView.leftOriginal().refresh();
-        }
         if (mergeView.rightOriginal) {
+          console.log("Setting font size to right original editor: ", size + "px");
           mergeView.rightOriginal().getWrapperElement().style["font-size"] = size + "px";
           mergeView.rightOriginal().refresh();
         }

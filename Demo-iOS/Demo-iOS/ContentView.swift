@@ -69,7 +69,7 @@ struct ContentView: View {
         .onLoadSuccess {
           print("Loaded")
         }
-        .onContentChange { newCode in
+        .onContentChange { _ in
           print("Content Change")
         }
         .onLoadFail { error in

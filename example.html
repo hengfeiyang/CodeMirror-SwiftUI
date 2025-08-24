@@ -597,7 +597,7 @@
     <script>
 
         // Sample data for merge views - more realistic examples
-        const leftCode = `function calculateTotal(items) {
+        const leftContent = `function calculateTotal(items) {
 let total = 0;
 for (let item of items) {
 total += item.price;
@@ -659,8 +659,7 @@ console.log("Grand Total:", result.grandTotal);`;
 
                 // Create merge view using CodeMirror 5 merge addon
                 window.mergeView = CodeMirror.MergeView(container, {
-                    value: leftCode,
-                    origLeft: null,
+                    value: leftContent,
                     orig: modifiedCode,
                     lineNumbers: true,
                     mode: "javascript",

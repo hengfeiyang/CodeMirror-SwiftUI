@@ -19,7 +19,8 @@ struct ContentView: View {
   @State private var showInvisibleCharacters = true
   @State private var lineWrapping = true
   @State private var copyButtonText = "Copy"
-  @State private var diffCopyButtonText = "Copy Diff"
+  @State private var copyLeftButtonText = "Copy Left"
+  @State private var copyRightButtonText = "Copy Right"
   @State private var diffCoordinator: CodeDiffViewController?
   
   private var themes = CodeViewTheme.allCases.sorted {
@@ -99,12 +100,12 @@ console.log("Grand Total:", result.grandTotal);
       
       // Provide visual feedback
       DispatchQueue.main.async {
-        diffCopyButtonText = "Copied!"
-        print("Diff content copied to clipboard!")
+        copyRightButtonText = "Copied!"
+        print("Modified content copied to clipboard!")
         
         // Reset button text after delay
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
-          diffCopyButtonText = "Copy Diff"
+          copyRightButtonText = "Copy Right"
         }
       }
     }
@@ -126,11 +127,7 @@ console.log("Grand Total:", result.grandTotal);
           
           Button(action: { lineWrapping.toggle() }) { Text("Wrap") }
           
-          Spacer()
-          
           Button(action: copyToClipboard) { Text(copyButtonText) }
-          
-          Spacer()
           
           Toggle(isOn: $showInvisibleCharacters) {
             Text("Show invisible chars.")
@@ -145,7 +142,6 @@ console.log("Grand Total:", result.grandTotal);
               .scaledToFit()
             
           }
-          .buttonStyle(PlainButtonStyle())
           .frame(width: 20, height: 20)
           
           Button(action: { fontSize += 1}) {
@@ -153,7 +149,6 @@ console.log("Grand Total:", result.grandTotal);
               .resizable()
               .scaledToFit()
           }
-          .buttonStyle(PlainButtonStyle())
           .frame(width: 20, height: 20)
         }
         .padding()
@@ -188,38 +183,40 @@ console.log("Grand Total:", result.grandTotal);
       // Code Diff Tab
       VStack {
         HStack {
-          Text("Diff View").font(.headline)
-          
-          Spacer()
-          
           Picker(selection: $selectedTheme, label: EmptyView()) {
             ForEach(0 ..< themes.count) {
               Text(self.themes[$0].rawValue)
             }
           }
-          .frame(minWidth: 80, idealWidth: 120, maxWidth: 120)
+          .frame(minWidth: 100, idealWidth: 150, maxWidth: 150)
+          
+          Spacer()
           
           Button(action: copyDiffToClipboard) { 
-            Text(diffCopyButtonText).font(.caption)
+            Text(copyLeftButtonText)
           }
-          .padding(.horizontal, 4)
           
-          HStack(spacing: 2) {
-            Text("Size:").font(.caption)
-            Button(action: { fontSize -= 1}) {
-              Image("minus").resizable().scaledToFit()
-            }
-            .buttonStyle(PlainButtonStyle())
-            .frame(width: 16, height: 16)
+          Button(action: copyDiffToClipboard) { 
+            Text(copyRightButtonText)
+          }
             
-            Text("\(fontSize)").font(.caption).frame(minWidth: 20)
+            Text("Font Size")
+            
+            Button(action: { fontSize -= 1}) {
+              Image("minus")
+                .resizable()
+                .scaledToFit()
+              
+            }
+            .frame(width: 20, height: 20)
             
             Button(action: { fontSize += 1}) {
-              Image("plus").resizable().scaledToFit()
+              Image("plus")
+                .resizable()
+                .scaledToFit()
             }
-            .buttonStyle(PlainButtonStyle())
-            .frame(width: 16, height: 16)
-          }
+            .frame(width: 20, height: 20)
+          
         }
         .padding()
         

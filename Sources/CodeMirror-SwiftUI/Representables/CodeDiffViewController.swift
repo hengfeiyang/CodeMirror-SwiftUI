@@ -53,7 +53,7 @@ extension CodeDiffViewController: WKScriptMessageHandler {
             break
         case CodeDiffViewRPC.textContentDidChange:
             // Text content changed - can be handled by parent if needed
-            if let content = message.body as? String {
+            if message.body is String {
                 // Store or process the updated content
                 // This maintains consistency with the regular CodeView behavior
             }
@@ -247,16 +247,35 @@ extension CodeDiffViewController {
                 completion(selection)
             }
         }
-    }
+    }    
     
-    // setFontSize is already defined above as setFontSize
+    // MARK: - Copy functionality for diff view
     
-    public func validateJSON(completion: @escaping (String) -> Void) {
+    public func getOriginalContent(completion: @escaping (String) -> Void) {
         guard let webView = webView else { return }
-        webView.evaluateJavaScript("ValidateJSON()") { result, _ in
-            if let errorMessage = result as? String {
-                completion(errorMessage)
+        webView.evaluateJavaScript("GetOriginalContent()") { result, _ in
+            if let content = result as? String {
+                completion(content)
             }
         }
+    }
+    
+    public func getModifiedContent(completion: @escaping (String) -> Void) {
+        guard let webView = webView else { return }
+        webView.evaluateJavaScript("GetModifiedContent()") { result, _ in
+            if let content = result as? String {
+                completion(content)
+            }
+        }
+    }
+    
+    public func copyOriginalToClipboard() {
+        guard let webView = webView else { return }
+        webView.evaluateJavaScript("CopyOriginalToClipboard()") { _, _ in }
+    }
+    
+    public func copyModifiedToClipboard() {
+        guard let webView = webView else { return }
+        webView.evaluateJavaScript("CopyModifiedToClipboard()") { _, _ in }
     }
 }

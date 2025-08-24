@@ -679,18 +679,73 @@
       SetDiffFontSize(size);
     }
 
-    // Validate JSON
-    function ValidateJSON() {
-      try {
-          const currentValue = GetContent();
-          if (!currentValue.trim()) { 
-              return "";
-          }
-          
-          JSON.parse(currentValue);
-          return "";
-      } catch (error) {
-          return error.message;
+    // MARK: - Copy functionality for diff view
+    
+    function GetOriginalContent() {
+      if (mergeView && mergeView.rightOriginal) {
+        return mergeView.rightOriginal().getValue();
+      } else if (mergeView && mergeView.leftOriginal) {
+        return mergeView.leftOriginal().getValue();
+      }
+      return originalCode;
+    }
+    
+    function GetModifiedContent() {
+      if (mergeView && mergeView.editor) {
+        return mergeView.editor().getValue();
+      }
+      return modifiedCode;
+    }
+    
+    function CopyOriginalToClipboard() {
+      const content = GetOriginalContent();
+      
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(content).then(() => {
+          console.log("Original content copied to clipboard");
+        }).catch(err => {
+          console.error("Failed to copy original content: ", err);
+        });
+      } else {
+        // Fallback for older browsers
+        const textArea = document.createElement("textarea");
+        textArea.value = content;
+        document.body.appendChild(textArea);
+        textArea.focus();
+        textArea.select();
+        try {
+          document.execCommand('copy');
+          console.log("Original content copied to clipboard (fallback)");
+        } catch (err) {
+          console.error("Failed to copy original content (fallback): ", err);
+        }
+        document.body.removeChild(textArea);
+      }
+    }
+    
+    function CopyModifiedToClipboard() {
+      const content = GetModifiedContent();
+      
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(content).then(() => {
+          console.log("Modified content copied to clipboard");
+        }).catch(err => {
+          console.error("Failed to copy modified content: ", err);
+        });
+      } else {
+        // Fallback for older browsers
+        const textArea = document.createElement("textarea");
+        textArea.value = content;
+        document.body.appendChild(textArea);
+        textArea.focus();
+        textArea.select();
+        try {
+          document.execCommand('copy');
+          console.log("Modified content copied to clipboard (fallback)");
+        } catch (err) {
+          console.error("Failed to copy modified content (fallback): ", err);
+        }
+        document.body.removeChild(textArea);
       }
     }
 

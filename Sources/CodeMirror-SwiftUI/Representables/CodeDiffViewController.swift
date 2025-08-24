@@ -14,21 +14,62 @@ import AppKit
 import UIKit
 #endif
 
+// MARK: - JavascriptFunction
+
+private struct JavascriptFunction {
+  
+  let functionString: String
+  let callback: ((Result<Any?, Error>) -> Void)?
+  
+  init(functionString: String, callback: ((Result<Any?, Error>) -> Void)? = nil) {
+    self.functionString = functionString
+    self.callback = callback
+  }
+}
+
 public class CodeDiffViewController: NSObject {
     
     var parent: CodeDiffView
     var webView: WKWebView?
 
     fileprivate var pageLoaded = false
+    fileprivate var pendingFunctions = [JavascriptFunction]()
   
     init(_ parent: CodeDiffView) {
         self.parent = parent
     }
     
-    func setWebView(_ webView: WKWebView) {
-        print("CodeDiffViewController: setWebView called")
-        self.webView = webView
-        print("CodeDiffViewController: webView set successfully")
+    // MARK: - Pending Functions Management
+    
+    private func addFunction(function: JavascriptFunction) {
+        pendingFunctions.append(function)
+    }
+    
+    private func callJavascriptFunction(function: JavascriptFunction) {
+        webView?.evaluateJavaScript(function.functionString) { (response, error) in
+            if let error = error {
+                function.callback?(.failure(error))
+            }
+            else {
+                function.callback?(.success(response))
+            }
+        }
+    }
+    
+    private func callPendingFunctions() {
+        for function in pendingFunctions {
+            callJavascriptFunction(function: function)
+        }
+        pendingFunctions.removeAll()
+    }
+    
+    private func callJavascript(javascriptString: String, callback: ((Result<Any?, Error>) -> Void)? = nil) {
+        if pageLoaded {
+            callJavascriptFunction(function: JavascriptFunction(functionString: javascriptString, callback: callback))
+        }
+        else {
+            addFunction(function: JavascriptFunction(functionString: javascriptString, callback: callback))
+        }
     }
 }
 
@@ -55,7 +96,7 @@ extension CodeDiffViewController: WKScriptMessageHandler {
         case CodeDiffViewRPC.isReady:
             // Diff view is ready
             pageLoaded = true
-            // callPendingFunctions()
+            callPendingFunctions()
             print("CodeDiffViewController: isReady")
             break
         case CodeDiffViewRPC.textContentDidChange:
@@ -75,10 +116,23 @@ extension CodeDiffViewController: WKScriptMessageHandler {
 // MARK: - JavaScript Interface
 
 extension CodeDiffViewController {
+
+    public func setWebView(_ webView: WKWebView) {
+        self.webView = webView
+        setDefaultTheme()
+        setTabInsertsSpaces(true)
+    }
+
+    func setTabInsertsSpaces(_ value: Bool) {
+        callJavascript(javascriptString: "SetTabInsertSpaces(\(value));")
+    }
     
     func setMimeType(_ mimeType: String) {
-        guard let webView = webView else { return }
-        webView.evaluateJavaScript("SetMimeType('\(mimeType)')") { _, _ in }
+        callJavascript(javascriptString: "SetMimeType('\(mimeType)')")
+    }
+    
+    public func getMimeType(_ block: JavascriptCallback?) {
+        callJavascript(javascriptString: "GetMimeType()", callback: block)
     }
     
     func setLeftContent(_ value: String) {
@@ -87,193 +141,208 @@ extension CodeDiffViewController {
             let script = """
             var content = "\(hexString)"; SetLeftContent(content);
             """
-            guard let webView = webView else { return }
-            webView.evaluateJavaScript(script) { _, _ in }
-            }
+            callJavascript(javascriptString: script)
+        }
     }
     
     func setRightContent(_ value: String) {
+        print("CodeDiffViewController: setRightContent called with value: \(value)")
         if let hexString = value.data(using: .utf8)?.hexEncodedString() {
             let script = """
             var content = "\(hexString)"; SetRightContent(content);
             """
-            guard let webView = webView else { return }
-            webView.evaluateJavaScript(script) { _, _ in }
+            callJavascript(javascriptString: script)
         }
     }
     
     func setFontSize(_ fontSize: Int) {
-        guard let webView = webView else { return }
-        webView.evaluateJavaScript("SetFontSize(\(fontSize))") { _, _ in }
-    }
-    
-    func setShowLineNumbers(_ show: Bool) {
-        guard let webView = webView else { return }
-        webView.evaluateJavaScript("SetLineNumbers(\(show))") { _, _ in }
-    }
-    
-    func setCollapseIdentical(_ collapse: Bool) {
-        guard let webView = webView else { return }
-        webView.evaluateJavaScript("SetCollapseIdentical(\(collapse))") { _, _ in }
+        callJavascript(javascriptString: "SetFontSize(\(fontSize))")
     }
     
     // MARK: - Additional API functions for consistency with regular CodeView
     
     public func getSupportedMimeTypes(completion: @escaping (String) -> Void) {
-        guard let webView = webView else { return }
-        webView.evaluateJavaScript("SupportedMimeTypes()") { result, _ in
-            if let mimeTypes = result as? String {
-                completion(mimeTypes)
+        callJavascript(javascriptString: "SupportedMimeTypes()") { result in
+            switch result {
+            case .success(let response):
+                if let mimeTypes = response as? String {
+                    completion(mimeTypes)
+                }
+            case .failure(_):
+                completion("")
             }
         }
     }
     
     func setLineWrapping(_ wrapping: Bool) {
-        guard let webView = webView else { return }
-        webView.evaluateJavaScript("SetLineWrapping(\(wrapping))") { _, _ in }
+        callJavascript(javascriptString: "SetLineWrapping(\(wrapping))")
     }
     
     func getLineWrapping(completion: @escaping (Bool) -> Void) {
-        guard let webView = webView else { return }
-        webView.evaluateJavaScript("GetLineWrapping()") { result, _ in
-            if let wrapping = result as? Bool {
-                completion(wrapping)
+        callJavascript(javascriptString: "GetLineWrapping()") { result in
+            switch result {
+            case .success(let response):
+                if let wrapping = response as? Bool {
+                    completion(wrapping)
+                }
+            case .failure(_):
+                completion(false)
             }
         }
     }
     
     func setReadOnly(_ readOnly: Bool) {
-        guard let webView = webView else { return }
-        webView.evaluateJavaScript("SetReadOnly(\(readOnly))") { _, _ in }
+        callJavascript(javascriptString: "SetReadOnly(\(readOnly))")
     }
     
     func getReadOnly(completion: @escaping (Bool) -> Void) {
-        guard let webView = webView else { return }
-        webView.evaluateJavaScript("GetReadOnly()") { result, _ in
-            if let readOnly = result as? Bool {
-                completion(readOnly)
+        callJavascript(javascriptString: "GetReadOnly()") { result in
+            switch result {
+            case .success(let response):
+                if let readOnly = response as? Bool {
+                    completion(readOnly)
+                }
+            case .failure(_):
+                completion(false)
             }
         }
     }
     
     func setIndentUnit(_ unit: Int) {
-        guard let webView = webView else { return }
-        webView.evaluateJavaScript("SetIndentUnit(\(unit))") { _, _ in }
+        callJavascript(javascriptString: "SetIndentUnit(\(unit))")
     }
     
     func getIndentUnit(completion: @escaping (Int) -> Void) {
-        guard let webView = webView else { return }
-        webView.evaluateJavaScript("GetIndentUnit()") { result, _ in
-            if let unit = result as? Int {
-                completion(unit)
+        callJavascript(javascriptString: "GetIndentUnit()") { result in
+            switch result {
+            case .success(let response):
+                if let unit = response as? Int {
+                    completion(unit)
+                }
+            case .failure(_):
+                completion(2)
             }
         }
     }
     
     func setThemeName(_ theme: String) {
-        guard let webView = webView else { return }
-        webView.evaluateJavaScript("SetTheme('\(theme)')") { _, _ in }
+        callJavascript(javascriptString: "SetTheme('\(theme)')")
+    }
+    
+    func setShowInvisibleCharacters(_ show: Bool) {
+        callJavascript(javascriptString: "ToggleInvisible(\(show))")
     }
     
     func toggleInvisible(_ toggle: Bool) {
-        guard let webView = webView else { return }
-        webView.evaluateJavaScript("ToggleInvisible(\(toggle))") { _, _ in }
+        callJavascript(javascriptString: "ToggleInvisible(\(toggle))")
     }
     
     func setTabSize(_ size: Int) {
-        guard let webView = webView else { return }
-        webView.evaluateJavaScript("SetTabSize(\(size))") { _, _ in }
+        callJavascript(javascriptString: "SetTabSize(\(size))")
     }
     
     func getTabSize(completion: @escaping (Int) -> Void) {
-        guard let webView = webView else { return }
-        webView.evaluateJavaScript("GetTabSize()") { result, _ in
-            if let size = result as? Int {
-                completion(size)
+        callJavascript(javascriptString: "GetTabSize()") { result in
+            switch result {
+            case .success(let response):
+                if let size = response as? Int {
+                    completion(size)
+                }
+            case .failure(_):
+                completion(4)
             }
         }
     }
     
     func setTabInsertSpaces(_ flag: Bool) {
-        guard let webView = webView else { return }
-        webView.evaluateJavaScript("SetTabInsertSpaces(\(flag))") { _, _ in }
+        callJavascript(javascriptString: "SetTabInsertSpaces(\(flag))")
     }
     
     func getTabInsertSpaces(completion: @escaping (Bool) -> Void) {
-        guard let webView = webView else { return }
-        webView.evaluateJavaScript("GetTabInsertSpaces()") { result, _ in
-            if let flag = result as? Bool {
-                completion(flag)
+        callJavascript(javascriptString: "GetTabInsertSpaces()") { result in
+            switch result {
+            case .success(let response):
+                if let flag = response as? Bool {
+                    completion(flag)
+                }
+            case .failure(_):
+                completion(true)
             }
         }
     }
     
     public func clearHistory() {
-        guard let webView = webView else { return }
-        webView.evaluateJavaScript("ClearHistory()") { _, _ in }
+        callJavascript(javascriptString: "ClearHistory()")
     }
     
     public func isClean(completion: @escaping (Bool) -> Void) {
-        guard let webView = webView else { return }
-        webView.evaluateJavaScript("IsClean()") { result, _ in
-            if let clean = result as? Bool {
-                completion(clean)
+        callJavascript(javascriptString: "IsClean()") { result in
+            switch result {
+            case .success(let response):
+                if let clean = response as? Bool {
+                    completion(clean)
+                }
+            case .failure(_):
+                completion(true)
             }
         }
     }
     
     func getTextSelection(completion: @escaping (String) -> Void) {
-        guard let webView = webView else { return }
-        webView.evaluateJavaScript("GetTextSelection()") { result, _ in
-            if let selection = result as? String {
-                completion(selection)
+        callJavascript(javascriptString: "GetTextSelection()") { result in
+            switch result {
+            case .success(let response):
+                if let selection = response as? String {
+                    completion(selection)
+                }
+            case .failure(_):
+                completion("")
             }
         }
     }    
     
     // MARK: - Copy functionality for diff view
     
+    public func getLeftContent(_ block: JavascriptCallback?) {
+        callJavascript(javascriptString: "GetLeftContent()", callback: block)
+    }
+    
+    public func getRightContent(_ block: JavascriptCallback?) {
+        callJavascript(javascriptString: "GetRightContent()", callback: block)
+    }
+    
+    // Convenience methods for string callbacks (used by demo)
     public func getLeftContent(completion: @escaping (String) -> Void) {
-        guard let webView = webView else { 
-            print("WebView not available in getLeftContent")
-            return 
-        }
-        print("Calling GetLeftContent() JavaScript function...")
-        webView.evaluateJavaScript("GetLeftContent()") { result, error in
-            if let error = error {
-                print("Error calling GetLeftContent(): \(error)")
-                completion("")
-                return
-            }
-            if let content = result as? String {
-                print("GetLeftContent() returned: \(content.prefix(100))...")
-                completion(content)
-            } else {
-                print("GetLeftContent() returned unexpected result type: \(String(describing: result))")
+        callJavascript(javascriptString: "GetLeftContent()") { result in
+            switch result {
+            case .success(let response):
+                if let content = response as? String {
+                    completion(content)
+                } else {
+                    completion("")
+                }
+            case .failure(_):
                 completion("")
             }
         }
     }
     
     public func getRightContent(completion: @escaping (String) -> Void) {
-        guard let webView = webView else { 
-            print("WebView not available in getRightContent")
-            return 
-        }
-        print("Calling GetRightContent() JavaScript function...")
-        webView.evaluateJavaScript("GetRightContent()") { result, error in
-            if let error = error {
-                print("Error calling GetRightContent(): \(error)")
-                completion("")
-                return
-            }
-            if let content = result as? String {
-                print("GetRightContent() returned: \(content.prefix(100))...")
-                completion(content)
-            } else {
-                print("GetRightContent() returned unexpected result type: \(String(describing: result))")
+        callJavascript(javascriptString: "GetRightContent()") { result in
+            switch result {
+            case .success(let response):
+                if let content = response as? String {
+                    completion(content)
+                } else {
+                    completion("")
+                }
+            case .failure(_):
                 completion("")
             }
         }
+    }
+
+    func setDefaultTheme() {
+        setMimeType("application/json")
     }
 }

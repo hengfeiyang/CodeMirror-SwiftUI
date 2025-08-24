@@ -28,7 +28,7 @@ struct ContentView: View {
   }
   
   // Sample code for diff demonstration
-  private let leftCode = """
+  @State private var leftCode = """
 function calculateTotal(items) {
   let total = 0;
   for (let item of items) {
@@ -46,7 +46,7 @@ const products = [
 console.log("Total:", calculateTotal(products));
 """
   
-  private let rightCode = """
+  @State private var rightCode = """
 function calculateTotal(items) {
   let total = 0;
   let tax = 0;
@@ -219,6 +219,13 @@ console.log("Grand Total:", result.grandTotal);
           Button(action: copyRightToClipboard) { 
             Text(copyRightButtonText)
           }
+          
+          Toggle(isOn: $showInvisibleCharacters) {
+            Text("Show invisible chars.")
+          }
+          .padding(.trailing, 8)
+          
+          Button(action: { lineWrapping.toggle() }) { Text("Wrap") }
             
             Text("Font Size")
             
@@ -241,13 +248,13 @@ console.log("Grand Total:", result.grandTotal);
         .padding()
         
         CodeDiffView(
-          leftCode: leftCode,
-          rightCode: rightCode,
+          leftCode: $leftCode,
+          rightCode: $rightCode,
           mode: CodeMode.javascript.mode(),
           theme: themes[selectedTheme],
           fontSize: fontSize,
-          showLineNumbers: true,
-          collapseIdentical: false,
+          showInvisibleCharacters: showInvisibleCharacters,
+          lineWrapping: lineWrapping,
           readOnly: false
         )
         .onLoadSuccess {
@@ -272,10 +279,6 @@ console.log("Grand Total:", result.grandTotal);
           // Test some of the new API functions after a short delay
           DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
             print("Testing coordinator functions after 2 second delay...")
-            
-            coordinator.getSupportedMimeTypes { mimeTypes in
-              print("Supported MIME types: \(mimeTypes)")
-            }
             
             coordinator.isClean { clean in
               print("Content is clean: \(clean)")

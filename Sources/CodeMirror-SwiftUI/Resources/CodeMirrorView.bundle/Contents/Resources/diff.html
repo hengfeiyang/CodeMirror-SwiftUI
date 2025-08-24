@@ -372,27 +372,7 @@
         console.error("Error creating merge view:", error);
       }
     }
-
-    function SetLineNumbers(show) {
-      if (mergeView) {
-        if (mergeView.editor) {
-          mergeView.editor().setOption("lineNumbers", show);
-        }
-        if (mergeView.leftOriginal) {
-          mergeView.leftOriginal().setOption("lineNumbers", show);
-        }
-        if (mergeView.rightOriginal) {
-          mergeView.rightOriginal().setOption("lineNumbers", show);
-        }
-      }
-    }
-
-    function SetCollapseIdentical(collapse) {
-      if (mergeView) {
-        mergeView.setOption("collapseIdentical", collapse);
-      }
-    }
-
+    
     // Add missing API functions from index.html to maintain consistency
 
     function getStringFromHex(content) {
@@ -570,9 +550,9 @@
     function SetRightContent(content) {
       console.log("SetRightContent called with:", code.substring(0, 100) + "...");
       var text = getStringFromHex(content);
-      editor.rightOriginal().setValue(text);
-      editor.rightOriginal().clearHistory();
-      editor.rightOriginal().markClean();
+      mergeView.rightOriginal().setValue(text);
+      mergeView.rightOriginal().clearHistory();
+      mergeView.rightOriginal().markClean();
     }
 
     function GetLeftContent() {
@@ -636,20 +616,6 @@
 
     function IsMergeViewReady() {
       return mergeView !== null && mergeView !== undefined;
-    }
-
-    function GetMergeViewStatus() {
-      if (!mergeView) {
-        return "Merge view not initialized";
-      }
-      return {
-        hasEditor: !!mergeView.editor,
-        hasOrig: !!mergeView.orig,
-        hasLeftOriginal: !!mergeView.leftOriginal,
-        hasRightOriginal: !!mergeView.rightOriginal,
-        editorValue: mergeView.editor ? mergeView.editor().getValue().length : 0,
-        origValue: mergeView.orig ? mergeView.orig.getValue().length : 0
-      };
     }
 
     // Initialize on load

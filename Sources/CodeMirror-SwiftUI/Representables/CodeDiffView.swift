@@ -19,35 +19,35 @@ typealias DiffRepresentableView = UIViewRepresentable
 
 public struct CodeDiffView: DiffRepresentableView {
     
-    var leftCode: String
-    var rightCode: String
+    @Binding var leftCode: String
+    @Binding var rightCode: String
     var theme: CodeViewTheme
     var mode: Mode
     var fontSize: Int
-    var showLineNumbers: Bool
-    var collapseIdentical: Bool
+    var showInvisibleCharacters: Bool
+    var lineWrapping: Bool
     var readOnly: Bool
     
     var onLoadSuccess: (() -> ())?
     var onLoadFail: ((Error) -> ())?
     var onCoordinatorReady: ((CodeDiffViewController) -> ())?
     
-    public init(leftCode: String,
-                rightCode: String,
+    public init(leftCode: Binding<String>,
+                rightCode: Binding<String>,
                 mode: Mode = CodeMode.swift.mode(),
                 theme: CodeViewTheme = CodeViewTheme.materialPalenight,
                 fontSize: Int = 12,
-                showLineNumbers: Bool = true,
-                collapseIdentical: Bool = false,
+                showInvisibleCharacters: Bool = false,
+                lineWrapping: Bool = true,
                 readOnly: Bool = false
     ) {
-        self.leftCode = leftCode
-        self.rightCode = rightCode
+        self._leftCode = leftCode
+        self._rightCode = rightCode
         self.mode = mode
         self.theme = theme
-        self.fontSize = fontSize
-        self.showLineNumbers = showLineNumbers
-        self.collapseIdentical = collapseIdentical
+        self.fontSize = fontSize      
+        self.showInvisibleCharacters = showInvisibleCharacters
+        self.lineWrapping = lineWrapping
         self.readOnly = readOnly
     }
     
@@ -140,22 +140,48 @@ extension CodeDiffView {
         context.coordinator.setWebView(webView)
         context.coordinator.setThemeName(theme.rawValue)
         context.coordinator.setMimeType(mode.mimeType)
+        context.coordinator.setFontSize(fontSize)
+        context.coordinator.setShowInvisibleCharacters(showInvisibleCharacters)
+        context.coordinator.setLineWrapping(lineWrapping)
+        context.coordinator.setReadOnly(readOnly)
+
+        // Set content after webView is ready (handled by pending functions)
         context.coordinator.setLeftContent(leftCode)
         context.coordinator.setRightContent(rightCode)
-        context.coordinator.setFontSize(fontSize)
-        context.coordinator.setShowLineNumbers(showLineNumbers)
-        context.coordinator.setCollapseIdentical(collapseIdentical)
-        context.coordinator.setReadOnly(readOnly)
         
         return webView
     }
     
-    private func updateWebView(_ context: CodeDiffView.Context) {
-        context.coordinator.setThemeName(theme.rawValue)
-        context.coordinator.setMimeType(mode.mimeType)
+    fileprivate func updateWebView(_ context: CodeDiffView.Context) {
+        updateWhatsNecessary(elementGetter: context.coordinator.getMimeType(_:), elementSetter: context.coordinator.setMimeType(_:), currentElementState: self.mode.mimeType)
+        
+        updateWhatsNecessary(elementGetter: context.coordinator.getLeftContent(_:), elementSetter: context.coordinator.setLeftContent(_:), currentElementState: self.leftCode)
+        updateWhatsNecessary(elementGetter: context.coordinator.getRightContent(_:), elementSetter: context.coordinator.setRightContent(_:), currentElementState: self.rightCode)
+        
+        context.coordinator.setThemeName(self.theme.rawValue)
         context.coordinator.setFontSize(fontSize)
-        context.coordinator.setShowLineNumbers(showLineNumbers)
-        context.coordinator.setCollapseIdentical(collapseIdentical)
+        context.coordinator.setShowInvisibleCharacters(showInvisibleCharacters)
+        context.coordinator.setLineWrapping(lineWrapping)
         context.coordinator.setReadOnly(readOnly)
+    }
+    
+    func updateWhatsNecessary(elementGetter: (JavascriptCallback?) -> Void,
+                                elementSetter: @escaping (_ elementState: String) -> Void,
+                                currentElementState: String) {
+        elementGetter({ result in
+            switch result {
+            case .success(let resp):
+                guard let previousElementState = resp as? String else { return }
+                
+                if previousElementState != currentElementState {
+                    elementSetter(currentElementState)
+                }
+                
+                return
+            case .failure(let error):
+                print("Error \(error)")
+                return
+            }
+        })
     }
 }

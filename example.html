@@ -613,7 +613,7 @@ const products = [
 
 console.log("Total:", calculateTotal(products));`;
 
-        const rightCode = `function calculateTotal(items) {
+        const modifiedCode = `function calculateTotal(items) {
 let total = 0;
 let tax = 0;
 for (let item of items) {
@@ -661,13 +661,12 @@ console.log("Grand Total:", result.grandTotal);`;
                 window.mergeView = CodeMirror.MergeView(container, {
                     value: leftCode,
                     origLeft: null,
-                    orig: rightCode,
+                    orig: modifiedCode,
                     lineNumbers: true,
                     mode: "javascript",
                     theme: 'devhelper-night',
                     highlightDifferences: true,
                     connect: "align",
-                    collapseIdentical: false,
                     allowEditingOriginals: true,
                     revertButtons: true,
                     styleActiveLine: true

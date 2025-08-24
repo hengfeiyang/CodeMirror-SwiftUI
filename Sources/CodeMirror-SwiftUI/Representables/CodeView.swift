@@ -70,12 +70,10 @@ public struct CodeView: RepresentableView {
   
   #if os(OSX)
   public func updateNSView(_ codeMirrorView: WKWebView, context: Context) {
-    
     updateWebView(context)
   }
   #elseif os(iOS)
   public func updateUIView(_ uiView: WKWebView, context: Context) {
-    
     updateWebView(context)
   }
   #endif
@@ -160,11 +158,11 @@ extension CodeView {
     context.coordinator.setThemeName(theme.rawValue)
     
     context.coordinator.setMimeType(mode.mimeType)
-    context.coordinator.setContent(code)
     context.coordinator.setFontSize(fontSize)
     context.coordinator.setShowInvisibleCharacters(showInvisibleCharacters)
     context.coordinator.setLineWrapping(lineWrapping)
     context.coordinator.setReadonly(readOnly)
+    context.coordinator.setContent(code)
     return webView
   }
   

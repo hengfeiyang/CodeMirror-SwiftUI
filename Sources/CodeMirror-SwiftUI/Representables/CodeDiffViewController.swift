@@ -18,6 +18,8 @@ public class CodeDiffViewController: NSObject {
     
     var parent: CodeDiffView
     var webView: WKWebView?
+
+    fileprivate var pageLoaded = false
   
     init(_ parent: CodeDiffView) {
         self.parent = parent
@@ -48,17 +50,21 @@ extension CodeDiffViewController: WKNavigationDelegate {
 extension CodeDiffViewController: WKScriptMessageHandler {
     
     public func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
-        
+    
         switch message.name {
         case CodeDiffViewRPC.isReady:
             // Diff view is ready
+            pageLoaded = true
+            // callPendingFunctions()
+            print("CodeDiffViewController: isReady")
             break
         case CodeDiffViewRPC.textContentDidChange:
-            // Text content changed - can be handled by parent if needed
-            if message.body is String {
-                // Store or process the updated content
-                // This maintains consistency with the regular CodeView behavior
-            }
+            let content = (message.body as? String) ?? ""
+            print("CodeDiffViewController: textContentDidChange: \(content)")
+            // if content != parent.code {
+            //     parent.onContentChange?(content)
+            //     parent.code = content
+            // }
             break
         default:
             break
@@ -76,6 +82,7 @@ extension CodeDiffViewController {
     }
     
     func setLeftContent(_ value: String) {
+        print("CodeDiffViewController: setLeftContent called with value: \(value)")
         if let hexString = value.data(using: .utf8)?.hexEncodedString() {
             let script = """
             var content = "\(hexString)"; SetLeftContent(content);

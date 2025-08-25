@@ -278,24 +278,6 @@ console.log("Grand Total:", result.grandTotal);
 
           // Demonstrate the new consistent API functions
           print("CodeDiffView Coordinator Ready")
-          
-          // Test some of the new API functions after a short delay
-          DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
-            print("CodeDiffView Testing coordinator functions after 2 second delay...")
-            
-            coordinator.isClean { clean in
-              print("CodeDiffView Content is clean: \(clean)")
-            }
-            
-            // Test the copy functions
-            coordinator.getLeftContent { content in
-              print("CodeDiffView Test getLeftContent: \(content.prefix(50))...")
-            }
-            
-            coordinator.getRightContent { content in
-              print("CodeDiffView Test getRightContent: \(content.prefix(50))...")
-            }
-          }
         }
       }
       .tabItem {

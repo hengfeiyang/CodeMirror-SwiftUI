@@ -521,7 +521,6 @@
     }
 
     function SetLeftContent(content) {
-      console.log("SetLeftContent called with:", content.substring(0, 100) + "...");
       var text = getStringFromHex(content);
       mergeView.editor().setValue(text);
       mergeView.editor().clearHistory();
@@ -529,7 +528,6 @@
     }
 
     function SetRightContent(content) {
-      console.log("SetRightContent called with:", content.substring(0, 100) + "...");
       var text = getStringFromHex(content);
       mergeView.rightOriginal().setValue(text);
       mergeView.rightOriginal().clearHistory();
@@ -575,12 +573,10 @@
       // Apply font size directly to the editor wrapper elements to preserve content
       if (mergeView) {
         if (mergeView.editor) {
-          console.log("Setting font size to left editor: ", size + "px");
           mergeView.editor().getWrapperElement().style["font-size"] = size + "px";
           mergeView.editor().refresh();
         }
         if (mergeView.rightOriginal) {
-          console.log("Setting font size to right original editor: ", size + "px");
           mergeView.rightOriginal().getWrapperElement().style["font-size"] = size + "px";
           mergeView.rightOriginal().refresh();
         }

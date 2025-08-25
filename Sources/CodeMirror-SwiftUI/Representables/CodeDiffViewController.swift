@@ -101,7 +101,6 @@ extension CodeDiffViewController: WKScriptMessageHandler {
             break
         case CodeDiffViewRPC.textContentDidChange:
             let content = (message.body as? [String: Any]) ?? [:]
-            print("CodeDiffViewController: textContentDidChange: \(content)")
             if let leftContent = content["left"] as? String, leftContent != parent.leftContent {
                 parent.onContentChange?(leftContent)
                 parent.leftContent = leftContent
@@ -140,7 +139,6 @@ extension CodeDiffViewController {
     }
     
     func setLeftContent(_ value: String) {
-        print("CodeDiffViewController: setLeftContent called with value: \(value)")
         if let hexString = value.data(using: .utf8)?.hexEncodedString() {
             let script = """
             var content = "\(hexString)"; SetLeftContent(content);
@@ -150,7 +148,6 @@ extension CodeDiffViewController {
     }
     
     func setRightContent(_ value: String) {
-        print("CodeDiffViewController: setRightContent called with value: \(value)")
         if let hexString = value.data(using: .utf8)?.hexEncodedString() {
             let script = """
             var content = "\(hexString)"; SetRightContent(content);
